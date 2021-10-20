@@ -30,8 +30,8 @@ const Header = (props) => {
                     <div className="header_link_color"><strong>LOGO</strong></div>
                     <div className="header_grow" />
                     <div className="header_links">
-                        <span className="header_link_color">Home</span>
-                        <span className="header_link_color">Subscription</span>
+                        <span className="header_link_color" onClick={() => props.history.push("/home")}>Home</span>
+                        <span className="header_link_color" onClick={() => props.history.push("/subscription")}>Subscription</span>
                         <span className="header_link_color">Add Employee</span>
                         <span className="header_link_color">Query</span>
 
@@ -55,10 +55,10 @@ const Header = (props) => {
                                     }}
                                 ></i>
                             </div>
-                            <span className="logout_Pointer_cursor">
+                            <span className="logout_Pointer_cursor" onClick={() => props.history.push("/home")}>
                                 Home
                             </span>
-                            <span className="logout_Pointer_cursor">
+                            <span className="logout_Pointer_cursor" onClick={() => props.history.push("/subscription")}>
                                 Subscription
                             </span>
                             <span className="logout_Pointer_cursor">

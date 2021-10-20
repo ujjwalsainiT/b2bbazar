@@ -5,9 +5,11 @@ import HOC from "../../../Common/HOC";
 
 function Subscription() {
     return (
-        <div>
-            
-        </div>
+        <>
+            <div className="content_padding">
+                subscription
+            </div>
+        </>
     )
 }
 
