@@ -56,10 +56,11 @@ const Login = (props) => {
                             </FormControl>
                         </div>
 
-                        <div className="inputfiledformatting mt-3">
+                        <div className="inputfiledformatting mt-5 mb-5">
                             <Button
                                 variant="contained"
                                 className="Login_page_button"
+                                onClick={()=>props.history.push("/home")}
                             >
                                 Log in
                             </Button>
@@ -68,9 +69,7 @@ const Login = (props) => {
                     </div>
                 </Card>
 
-                <Card className="pt-2 pb-2 Card_shadow mt-2">
-                    <span className="Login_in">forgot Password?</span>
-                </Card>
+               
             </div>
 
         </>

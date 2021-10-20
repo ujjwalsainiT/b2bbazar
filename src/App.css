@@ -14,8 +14,8 @@ responsive to mobile view on various screen width as below */
 /*content_padding is used for padding from top from header*/
 .content_padding {
   padding-top: 7%;
-  margin-left: 15%;
-  margin-right: 15%;
+  margin-left: 10%;
+  margin-right: 10%;
 }
 
 .page_heading {
