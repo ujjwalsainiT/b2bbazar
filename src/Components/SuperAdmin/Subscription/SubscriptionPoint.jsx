@@ -151,10 +151,12 @@ function SubscriptionPoint(props) {
                                                 <div className="d-flex justify-content-between">
 
                                                     <div className=" p-2">
-                                                        <span>{item.valid ?
-                                                            <i class="fa fa-check text-success"></i>
-                                                            : <i class="fa fa-times text-danger"></i>
-                                                        }</span>
+                                                        <span>
+                                                            {item.valid ?
+                                                                <i class="fa fa-check text-success"></i>
+                                                                : <i class="fa fa-times text-danger"></i>
+                                                            }
+                                                        </span>
                                                         <span className="ml-3"> {item.point}</span>
 
                                                     </div>

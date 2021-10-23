@@ -28,7 +28,7 @@ function Home(props) {
                             </Card>
                         </Grid>
                         <Grid item md={3} className="p-3">
-                            <Card className="p-5 text-center Card_shadow card_color">
+                            <Card className="p-5 text-center Card_shadow card_color" onClick={() => props.history.push("/create-group")}>
                                 <div><strong>Create Group</strong></div>
                             </Card>
                         </Grid>

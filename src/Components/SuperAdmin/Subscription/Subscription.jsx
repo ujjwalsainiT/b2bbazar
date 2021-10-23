@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Card, Button, Dialog, DialogActions, DialogTitle, DialogContent } from '@material-ui/core';
+import { Grid, Card, Button, Dialog, DialogActions, DialogTitle, DialogContent } from '@material-ui/core';
 import Expand from "react-expand-animated";
 
 //common header
@@ -12,11 +12,11 @@ function Subscription(props) {
     //local state
     const [addMangeopen, setaddMangeopen] = useState(false);
     const [name, setname] = useState("");
-    const [Month, setMonth] = useState("");
+    const [description, setdescription] = useState("");
     const [SubscriptionDataArr, setSubscriptionDataArr] = useState([]);
     const [EditDailogOpen, setEditDailogOpen] = useState(false);
     const [Editname, setEditname] = useState("");
-    const [EditMonth, setEditMonth] = useState("")
+    const [Editdescription, setEditdescription] = useState("")
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -25,7 +25,7 @@ function Subscription(props) {
 
     const OpenEditDailog = (data) => {
         setEditname(data.name);
-        setEditMonth(data.month);
+        setEditdescription(data.description);
         setEditDailogOpen(!EditDailogOpen)
     }
     return (
@@ -73,22 +73,17 @@ function Subscription(props) {
                                                     </div>
 
                                                     <div className="text_filed_heading">
-                                                        Month
+                                                        Description
                                                     </div>
                                                     <div className=" mt-1">
-                                                        <select
+                                                        <textarea
                                                             class="form-control"
-                                                            value={Month}
+                                                            rows="3"
+                                                            value={description}
                                                             onChange={(e) => {
-                                                                setMonth(e.target.value);
+                                                                setdescription(e.target.value)
                                                             }}
-                                                        >
-                                                            <option value="">select Month</option>
-                                                            <option value="1">1 month</option>
-                                                            <option value="3">3 Month</option>
-                                                            <option value="6">6 Month</option>
-                                                            <option value="12">12 Month</option>
-                                                        </select>
+                                                        ></textarea>
                                                     </div>
 
                                                 </div>
@@ -101,18 +96,18 @@ function Subscription(props) {
                                                                 alert("Enter the Subscription Name");
                                                                 return;
                                                             }
-                                                            if (Month === "") {
-                                                                alert("Enter the Month");
+                                                            if (description === "") {
+                                                                alert("Enter the Description");
                                                                 return;
                                                             }
                                                             SubscriptionDataArr.push({
                                                                 name: name,
-                                                                month: Month,
+                                                                description: description,
                                                                 show: true,
                                                             });
                                                             setSubscriptionDataArr([...SubscriptionDataArr]);
                                                             setname("");
-                                                            setMonth("");
+                                                            setdescription("");
                                                             setaddMangeopen(!addMangeopen)
                                                         }}
                                                     >
@@ -150,42 +145,44 @@ function Subscription(props) {
                                     <Card className="Card_shadow mb-2 mt-2">
                                         <div className="card_admissiondetails_height">
                                             <div className="textfiled_margin">
-                                                <div className="d-flex justify-content-between">
+                                                <Grid className="Component_main_grid mt-2">
+                                                    <Grid item md={4}>
 
-                                                    <div className=" p-2">
-                                                        {item.name}
-                                                    </div>
+                                                        <div className=" p-2">
+                                                            {item.name}
+                                                        </div>
+                                                    </Grid>
+                                                    <Grid item md={4}>
+                                                        <div className="p-2">
+                                                            {item.description}
+                                                        </div>
+                                                    </Grid>
+                                                    <Grid item md={4}>
+                                                        <div className="d-flex p-2">
 
-                                                    <div className="text-center p-2">
-                                                        {item.month}
-                                                    </div>
-
-                                                    {" "}
-                                                    <div className="d-flex p-2">
-
-                                                        <span className="action_icon mr-2 ml-1">
-                                                            <i
-                                                                className="fa fa-pencil"
-                                                                onClick={() => OpenEditDailog(item)}
-                                                            ></i>
-                                                        </span>
-                                                        <span className="action_icon ml-2">
-                                                            <i
-                                                                className="fa fa-trash "
-                                                                onClick={() => {
-                                                                    SubscriptionDataArr.splice(index, 1);
-                                                                    setSubscriptionDataArr([...SubscriptionDataArr]);
-                                                                }}
-                                                            ></i>
-                                                        </span>
-                                                        <span className="action_icon  ml-2" onClick={() => props.history.push("/subscription-point", {
-                                                            item
-                                                        })}>
-                                                            Manage
-                                                        </span>
-                                                    </div>
-
-                                                </div>
+                                                            <span className="action_icon mr-2 ml-1">
+                                                                <i
+                                                                    className="fa fa-pencil"
+                                                                    onClick={() => OpenEditDailog(item)}
+                                                                ></i>
+                                                            </span>
+                                                            <span className="action_icon ml-2">
+                                                                <i
+                                                                    className="fa fa-trash "
+                                                                    onClick={() => {
+                                                                        SubscriptionDataArr.splice(index, 1);
+                                                                        setSubscriptionDataArr([...SubscriptionDataArr]);
+                                                                    }}
+                                                                ></i>
+                                                            </span>
+                                                            <span className="action_icon  ml-2" onClick={() => props.history.push("/subscription-point", {
+                                                                item
+                                                            })}>
+                                                                Manage
+                                                            </span>
+                                                        </div>
+                                                    </Grid>
+                                                </Grid>
                                             </div>
                                         </div>
                                     </Card>
@@ -231,22 +228,17 @@ function Subscription(props) {
                     </div>
 
                     <div className="text_filed_heading">
-                        Month
+                        Description
                     </div>
                     <div className=" mt-1">
-                        <select
+                        <textarea
                             class="form-control"
-                            value={EditMonth}
+                            rows="3"
+                            value={Editdescription}
                             onChange={(e) => {
-                                setEditMonth(e.target.value);
+                                setEditdescription(e.target.value)
                             }}
-                        >
-                            <option value="">select Month</option>
-                            <option value="1">1 month</option>
-                            <option value="3">3 Month</option>
-                            <option value="6">6 Month</option>
-                            <option value="12">12 Month</option>
-                        </select>
+                        ></textarea>
 
                     </div>
                 </DialogContent>
