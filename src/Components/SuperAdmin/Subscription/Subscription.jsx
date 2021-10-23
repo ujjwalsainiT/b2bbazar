@@ -113,6 +113,7 @@ function Subscription(props) {
                                                             setSubscriptionDataArr([...SubscriptionDataArr]);
                                                             setname("");
                                                             setMonth("");
+                                                            setaddMangeopen(!addMangeopen)
                                                         }}
                                                     >
                                                         Create
@@ -207,9 +208,9 @@ function Subscription(props) {
                     Edit Subscription
                     <span
                         className="float-right icon_color"
-                        onClick={() => setEditDailogOpen(!EditDailogOpen)}
+                       
                     >
-                        <i class="fa fa-times hover_cursor" aria-hidden="true"></i>{" "}
+                        <i class="fa fa-times hover_cursor"  onClick={() => setEditDailogOpen(!EditDailogOpen)}></i>{" "}
                     </span>
                 </DialogTitle>
                 <DialogContent>

@@ -1,6 +1,9 @@
 .MainHeader {
   background-color: #fff !important;
 }
+.headre_logo {
+  width: 63px;
+}
 .header_padding {
   width: 100%;
   padding-right: 7% !important;

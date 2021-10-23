@@ -43,7 +43,7 @@ function Home(props) {
                             </Card>
                         </Grid>
                         <Grid item md={3} className="p-3">
-                            <Card className="p-5 text-center Card_shadow card_color">
+                            <Card className="p-5 text-center Card_shadow card_color" onClick={() => props.history.push("/sub-category")}>
                                 <div className="text_font"><strong> <i class="fa fa-plus mr-2" />Add Sub-Category</strong></div>
                             </Card>
                         </Grid>

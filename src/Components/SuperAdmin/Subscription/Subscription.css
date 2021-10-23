@@ -7,7 +7,7 @@
   margin-right: 2%;
 }
 .cardheight_overflow {
-  height: 70vh;
+  height:525px;
   overflow-y: scroll;
 }
 .text_filed_heading {

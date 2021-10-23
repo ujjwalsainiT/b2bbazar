@@ -90,7 +90,7 @@ function Category() {
                                                             });
                                                             setCategoryDataArr([...CategoryDataArr]);
                                                             setcategory("");
-
+                                                            setaddMangeopen(!addMangeopen)
                                                         }}
                                                     >
                                                         Create
@@ -179,9 +179,9 @@ function Category() {
                     Edit Category
                     <span
                         className="float-right icon_color"
-                        onClick={() => setEditDailogOpen(!EditDailogOpen)}
+
                     >
-                        <i class="fa fa-times hover_cursor" aria-hidden="true"></i>{" "}
+                        <i class="fa fa-times hover_cursor" onClick={() => setEditDailogOpen(!EditDailogOpen)}></i>{" "}
                     </span>
                 </DialogTitle>
                 <DialogContent>

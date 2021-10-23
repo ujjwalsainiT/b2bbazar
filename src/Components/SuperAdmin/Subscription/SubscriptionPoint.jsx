@@ -16,10 +16,11 @@ function SubscriptionPoint(props) {
     //local state
     const [addMangeopen, setaddMangeopen] = useState(false);
     const [point, setpoint] = useState("");
+    const [isvalid, setisvalid] = useState(false);
     const [SubscriptionDataArr, setSubscriptionDataArr] = useState([]);
     const [EditDailogOpen, setEditDailogOpen] = useState(false);
     const [Editpoint, setEditpoint] = useState("");
-
+    const [Editisvalid, setEditisvalid] = useState(false);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -28,7 +29,7 @@ function SubscriptionPoint(props) {
 
     const OpenEditDailog = (data) => {
         setEditpoint(data.point);
-
+        setEditisvalid(data.valid)
         setEditDailogOpen(!EditDailogOpen)
     }
     return (
@@ -74,8 +75,23 @@ function SubscriptionPoint(props) {
                                                             }}
                                                         />
                                                     </div>
-
-
+                                                    <div className="text_filed_heading">
+                                                        Is Valid
+                                                    </div>
+                                                    <div className=" mt-1">
+                                                        <div class="form-check">
+                                                            <input
+                                                                class="form-check-input"
+                                                                type="checkbox"
+                                                                checked={isvalid}
+                                                                onChange={(e) => {
+                                                                    setisvalid(e.target.checked)
+                                                                }} />
+                                                            <label class="form-check-label" for="flexCheckDefault">
+                                                                is Valid
+                                                            </label>
+                                                        </div>
+                                                    </div>
 
                                                 </div>
                                                 <div className="mt-2 pb-2 ">
@@ -90,11 +106,12 @@ function SubscriptionPoint(props) {
 
                                                             SubscriptionDataArr.push({
                                                                 point: point,
-                                                                show: true,
+                                                                valid: isvalid,
                                                             });
                                                             setSubscriptionDataArr([...SubscriptionDataArr]);
                                                             setpoint("");
-
+                                                            setisvalid(false);
+                                                            setaddMangeopen(!addMangeopen)
                                                         }}
                                                     >
                                                         Create
@@ -134,7 +151,12 @@ function SubscriptionPoint(props) {
                                                 <div className="d-flex justify-content-between">
 
                                                     <div className=" p-2">
-                                                        {item.point}
+                                                        <span>{item.valid ?
+                                                            <i class="fa fa-check text-success"></i>
+                                                            : <i class="fa fa-times text-danger"></i>
+                                                        }</span>
+                                                        <span className="ml-3"> {item.point}</span>
+
                                                     </div>
 
 
@@ -183,9 +205,9 @@ function SubscriptionPoint(props) {
                     Edit Subscription Point
                     <span
                         className="float-right icon_color"
-                        onClick={() => setEditDailogOpen(!EditDailogOpen)}
+
                     >
-                        <i class="fa fa-times hover_cursor" aria-hidden="true"></i>{" "}
+                        <i class="fa fa-times hover_cursor" onClick={() => setEditDailogOpen(!EditDailogOpen)}></i>{" "}
                     </span>
                 </DialogTitle>
                 <DialogContent>
@@ -203,6 +225,24 @@ function SubscriptionPoint(props) {
                                 setEditpoint(e.target.value);
                             }}
                         />
+                    </div>
+
+                    <div className="text_filed_heading">
+                        Is Valid
+                    </div>
+                    <div className=" mt-1">
+                        <div class="form-check">
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                checked={Editisvalid}
+                                onChange={(e) => {
+                                    setEditisvalid(e.target.checked)
+                                }} />
+                            <label class="form-check-label" for="flexCheckDefault">
+                                is Valid
+                            </label>
+                        </div>
                     </div>
 
                 </DialogContent>
