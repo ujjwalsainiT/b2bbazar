@@ -7,7 +7,11 @@ import HOC from "../../../Common/HOC";
 
 import "./Subscription.css";
 
-function SubscriptionPoint() {
+function SubscriptionPoint(props) {
+
+    console.log("props:::::::", props)
+
+    let subscriptionName = props.location.state.item.name
 
     //local state
     const [addMangeopen, setaddMangeopen] = useState(false);
@@ -31,7 +35,7 @@ function SubscriptionPoint() {
         <>
             <div className="content_padding">
 
-                <div className="mb-3 page_heading">Manage Subscription Point</div>
+                <div className="mb-3 page_heading">Manage {subscriptionName} Point</div>
                 <Card className="pt-3 pb-4 Card_shadow">
                     <div className="card_admissiondetails_height">
                         <div className="textfiled_margin">
@@ -50,12 +54,9 @@ function SubscriptionPoint() {
                                         <div className="card_admissiondetails_height">
                                             <div className="textfiled_margin">
                                                 <div className="card_content_instition">
-                                                    <div
-                                                        className="text-right"
-                                                        onClick={() => setaddMangeopen(!addMangeopen)}
-                                                    >
-                                                        <span className="icon_color">
-                                                            <i class="fa fa-times cursor"></i>
+                                                    <div className="text-right">
+                                                        <span className="icon_color hover_cursor">
+                                                            <i class="fa fa-times cursor" onClick={() => setaddMangeopen(!addMangeopen)}></i>
                                                         </span>
                                                     </div>
                                                     <div className="text_filed_heading">
@@ -179,7 +180,7 @@ function SubscriptionPoint() {
                 fullWidth="fullWidth"
             >
                 <DialogTitle>
-                    Edit Subscription
+                    Edit Subscription Point
                     <span
                         className="float-right icon_color"
                         onClick={() => setEditDailogOpen(!EditDailogOpen)}
@@ -195,7 +196,7 @@ function SubscriptionPoint() {
                         <input
                             type="text"
                             className="form-control "
-                            placeholder="Enter Bids"
+                            placeholder="Enter he Subscrripttion point"
                             autoComplete="off"
                             value={Editpoint}
                             onChange={(e) => {

@@ -13,7 +13,7 @@ function Home(props) {
                 <div className="mt-2 mb-2">
                     <Grid className="Component_main_grid">
                         <Grid item md={3} className="p-3">
-                            <Card className="p-5 text-center Card_shadow card_color" onClick={()=>props.history.push("/subscription")}>
+                            <Card className="p-5 text-center Card_shadow card_color" onClick={() => props.history.push("/subscription")}>
                                 <div><strong> <i class="fa fa-plus mr-2" />Add Subsciption</strong></div>
                             </Card>
                         </Grid>
@@ -31,6 +31,25 @@ function Home(props) {
                             <Card className="p-5 text-center Card_shadow card_color">
                                 <div><strong>Create Group</strong></div>
                             </Card>
+                        </Grid>
+                    </Grid>
+                </div>
+
+                <div className="mt-2 mb-2">
+                    <Grid className="Component_main_grid">
+                        <Grid item md={3} className="p-3">
+                            <Card className="p-5 text-center Card_shadow card_color" onClick={() => props.history.push("/category")}>
+                                <div><strong> <i class="fa fa-plus mr-2" />Add Category</strong></div>
+                            </Card>
+                        </Grid>
+                        <Grid item md={3} className="p-3">
+                            <Card className="p-5 text-center Card_shadow card_color">
+                                <div className="text_font"><strong> <i class="fa fa-plus mr-2" />Add Sub-Category</strong></div>
+                            </Card>
+                        </Grid>
+
+                        <Grid item md={6} className="p-3">
+
                         </Grid>
                     </Grid>
                 </div>
