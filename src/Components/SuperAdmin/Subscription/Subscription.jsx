@@ -76,19 +76,19 @@ function Subscription(props) {
                                                         Month
                                                     </div>
                                                     <div className=" mt-1">
-                                                        <input
-                                                            type="text"
-                                                            className="form-control "
-                                                            placeholder="Enter Month"
-                                                            autoComplete="off"
+                                                        <select
+                                                            class="form-control"
                                                             value={Month}
                                                             onChange={(e) => {
-                                                                const re = /^[0-9\b]+$/;
-                                                                if (e.target.value === '' || re.test(e.target.value)) {
-                                                                    setMonth(e.target.value);
-                                                                }
+                                                                setMonth(e.target.value);
                                                             }}
-                                                        />
+                                                        >
+                                                            <option value="">select Month</option>
+                                                            <option value="1">1 month</option>
+                                                            <option value="3">3 Month</option>
+                                                            <option value="6">6 Month</option>
+                                                            <option value="12">12 Month</option>
+                                                        </select>
                                                     </div>
 
                                                 </div>
@@ -208,9 +208,9 @@ function Subscription(props) {
                     Edit Subscription
                     <span
                         className="float-right icon_color"
-                       
+
                     >
-                        <i class="fa fa-times hover_cursor"  onClick={() => setEditDailogOpen(!EditDailogOpen)}></i>{" "}
+                        <i class="fa fa-times hover_cursor" onClick={() => setEditDailogOpen(!EditDailogOpen)}></i>{" "}
                     </span>
                 </DialogTitle>
                 <DialogContent>
@@ -234,19 +234,20 @@ function Subscription(props) {
                         Month
                     </div>
                     <div className=" mt-1">
-                        <input
-                            type="text"
-                            className="form-control "
-                            placeholder="Enter the Month"
-                            autoComplete="off"
+                        <select
+                            class="form-control"
                             value={EditMonth}
                             onChange={(e) => {
-                                const re = /^[0-9\b]+$/;
-                                if (e.target.value === '' || re.test(e.target.value)) {
-                                    setEditMonth(e.target.value);
-                                }
+                                setEditMonth(e.target.value);
                             }}
-                        />
+                        >
+                            <option value="">select Month</option>
+                            <option value="1">1 month</option>
+                            <option value="3">3 Month</option>
+                            <option value="6">6 Month</option>
+                            <option value="12">12 Month</option>
+                        </select>
+
                     </div>
                 </DialogContent>
                 <DialogActions>

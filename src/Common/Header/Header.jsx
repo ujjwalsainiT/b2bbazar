@@ -30,7 +30,7 @@ const Header = (props) => {
         <div className="topheader">
             <AppBar position="fixed" className="MainHeader">
                 <Toolbar className="header_padding">
-                    <div className="header_link_color"><img src={logo} alt="" className="headre_logo"/></div>
+                    <div className="header_link_color"><img src={logo} alt="" className="headre_logo" onClick={() => props.history.push("/home")} /></div>
                     <div className="header_grow" />
                     <div className="header_links">
                         <span className="header_link_color" onClick={() => props.history.push("/home")}>Home</span>
