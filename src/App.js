@@ -9,6 +9,7 @@ import SubCategory from "./Components/SuperAdmin/Category/SubCategory";
 import CreateGroup from "./Components/SuperAdmin/CreateGroup/CreateGroup";
 import Home from "./Components/SuperAdmin/Home/Home";
 import Subscription from "./Components/SuperAdmin/Subscription/Subscription";
+import SubscriptionMonth from "./Components/SuperAdmin/Subscription/SubscriptionMonth";
 import SubscriptionPoint from "./Components/SuperAdmin/Subscription/SubscriptionPoint";
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
         <Route exact path="/subscription" component={Subscription} />
         <Route exact path="/home" component={Home} />
         <Route exact path="/subscription-point" component={SubscriptionPoint} />
+        <Route exact path="/subscription-month" component={SubscriptionMonth} />
         <Route exact path="/category" component={Category} />
         <Route exact path="/sub-category" component={SubCategory} />
         <Route exact path="/create-group" component={CreateGroup} />
