@@ -6,6 +6,7 @@ import './App.css';
 import Login from './Components/Login/Login';
 import Home from './Components/SuperAdmin/Home/Home';
 import Subscription from './Components/SuperAdmin/Subscription/Subscription';
+import SubscriptionPoint from './Components/SuperAdmin/Subscription/SubscriptionPoint';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
        <Route exact path="/" component={Login}/>
        <Route exact path="/subscription" component={Subscription}/>
        <Route exact path="/home" component={Home}/>
+       <Route exact path="/subscription-point" component={SubscriptionPoint}/>
      </Switch>
     </>
   );

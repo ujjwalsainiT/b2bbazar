@@ -7,16 +7,15 @@ import HOC from "../../../Common/HOC";
 
 import "./Subscription.css";
 
-function Subscription(props) {
+function SubscriptionPoint() {
 
     //local state
     const [addMangeopen, setaddMangeopen] = useState(false);
-    const [name, setname] = useState("");
-    const [Month, setMonth] = useState("");
+    const [point, setpoint] = useState("");
     const [SubscriptionDataArr, setSubscriptionDataArr] = useState([]);
     const [EditDailogOpen, setEditDailogOpen] = useState(false);
-    const [Editname, setEditname] = useState("");
-    const [EditMonth, setEditMonth] = useState("")
+    const [Editpoint, setEditpoint] = useState("");
+
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -24,15 +23,15 @@ function Subscription(props) {
 
 
     const OpenEditDailog = (data) => {
-        setEditname(data.name);
-        setEditMonth(data.month);
+        setEditpoint(data.point);
+
         setEditDailogOpen(!EditDailogOpen)
     }
     return (
         <>
             <div className="content_padding">
 
-                <div className="mb-3 page_heading">Manage Subscription</div>
+                <div className="mb-3 page_heading">Manage Subscription Point</div>
                 <Card className="pt-3 pb-4 Card_shadow">
                     <div className="card_admissiondetails_height">
                         <div className="textfiled_margin">
@@ -42,7 +41,7 @@ function Subscription(props) {
                                         <i className="fa fa-plus-circle"></i>
                                     </span>
                                     <span className="mt-1 ml-2 addmanageuserfont hover_cursor" onClick={() => setaddMangeopen(!addMangeopen)}>
-                                        <strong> Add New Subscription</strong>
+                                        <strong> Add New Point</strong>
                                     </span>
                                 </div>
                             ) : (
@@ -60,39 +59,22 @@ function Subscription(props) {
                                                         </span>
                                                     </div>
                                                     <div className="text_filed_heading">
-                                                        Subscription Name
+                                                        Subscription Point
                                                     </div>
                                                     <div className=" mt-1">
                                                         <input
                                                             type="text"
                                                             className="form-control "
-                                                            placeholder="Enter the Subscription Name"
+                                                            placeholder="Enter the Subscription point"
                                                             autoComplete="off"
-                                                            value={name}
+                                                            value={point}
                                                             onChange={(e) => {
-                                                                setname(e.target.value);
+                                                                setpoint(e.target.value);
                                                             }}
                                                         />
                                                     </div>
 
-                                                    <div className="text_filed_heading">
-                                                        Month
-                                                    </div>
-                                                    <div className=" mt-1">
-                                                        <input
-                                                            type="text"
-                                                            className="form-control "
-                                                            placeholder="Enter Month"
-                                                            autoComplete="off"
-                                                            value={Month}
-                                                            onChange={(e) => {
-                                                                const re = /^[0-9\b]+$/;
-                                                                if (e.target.value === '' || re.test(e.target.value)) {
-                                                                    setMonth(e.target.value);
-                                                                }
-                                                            }}
-                                                        />
-                                                    </div>
+
 
                                                 </div>
                                                 <div className="mt-2 pb-2 ">
@@ -100,22 +82,18 @@ function Subscription(props) {
                                                         variant="contained"
                                                         className="button_formatting"
                                                         onClick={() => {
-                                                            if (name === "") {
-                                                                alert("Enter the Subscription Name");
+                                                            if (point === "") {
+                                                                alert("Enter the Subscription point");
                                                                 return;
                                                             }
-                                                            if (Month === "") {
-                                                                alert("Enter the Month");
-                                                                return;
-                                                            }
+
                                                             SubscriptionDataArr.push({
-                                                                name: name,
-                                                                month: Month,
+                                                                point: point,
                                                                 show: true,
                                                             });
                                                             setSubscriptionDataArr([...SubscriptionDataArr]);
-                                                            setname("");
-                                                            setMonth("");
+                                                            setpoint("");
+
                                                         }}
                                                     >
                                                         Create
@@ -155,12 +133,10 @@ function Subscription(props) {
                                                 <div className="d-flex justify-content-between">
 
                                                     <div className=" p-2">
-                                                        {item.name}
+                                                        {item.point}
                                                     </div>
 
-                                                    <div className="text-center p-2">
-                                                        {item.month}
-                                                    </div>
+
 
                                                     {" "}
                                                     <div className="d-flex p-2">
@@ -180,9 +156,7 @@ function Subscription(props) {
                                                                 }}
                                                             ></i>
                                                         </span>
-                                                        <span className="action_icon  ml-2" onClick={() => props.history.push("/subscription-point")}>
-                                                            Manage
-                                                        </span>
+
                                                     </div>
 
                                                 </div>
@@ -215,7 +189,7 @@ function Subscription(props) {
                 </DialogTitle>
                 <DialogContent>
                     <div className="text_filed_heading">
-                        Number of Bids
+                        Subscription Point
                     </div>
                     <div className=" mt-1">
                         <input
@@ -223,31 +197,13 @@ function Subscription(props) {
                             className="form-control "
                             placeholder="Enter Bids"
                             autoComplete="off"
-                            value={Editname}
+                            value={Editpoint}
                             onChange={(e) => {
-                                setEditname(e.target.value);
+                                setEditpoint(e.target.value);
                             }}
                         />
                     </div>
 
-                    <div className="text_filed_heading">
-                        Price
-                    </div>
-                    <div className=" mt-1">
-                        <input
-                            type="text"
-                            className="form-control "
-                            placeholder="Enter Price"
-                            autoComplete="off"
-                            value={EditMonth}
-                            onChange={(e) => {
-                                const re = /^[0-9\b]+$/;
-                                if (e.target.value === '' || re.test(e.target.value)) {
-                                    setEditMonth(e.target.value);
-                                }
-                            }}
-                        />
-                    </div>
                 </DialogContent>
                 <DialogActions>
                     <Button
@@ -267,4 +223,4 @@ function Subscription(props) {
     )
 }
 
-export default HOC(Subscription)
+export default HOC(SubscriptionPoint)
