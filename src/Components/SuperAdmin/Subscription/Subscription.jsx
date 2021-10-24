@@ -13,6 +13,7 @@ function Subscription(props) {
     const [addMangeopen, setaddMangeopen] = useState(false);
     const [name, setname] = useState("");
     const [description, setdescription] = useState("");
+    const [ImageUrl, setImageUrl] = useState("")
     const [SubscriptionDataArr, setSubscriptionDataArr] = useState([]);
     const [EditDailogOpen, setEditDailogOpen] = useState(false);
     const [Editname, setEditname] = useState("");
@@ -27,6 +28,10 @@ function Subscription(props) {
         setEditname(data.name);
         setEditdescription(data.description);
         setEditDailogOpen(!EditDailogOpen)
+    }
+
+    const ImageUpload = (e) => {
+        setImageUrl(URL.createObjectURL(e.target.files[0]))
     }
     return (
         <>
@@ -86,6 +91,17 @@ function Subscription(props) {
                                                         ></textarea>
                                                     </div>
 
+                                                    <div className="text_filed_heading">
+                                                        Subscription Image
+                                                    </div>
+                                                    <div className=" mt-1">
+                                                        <input
+                                                            type="file"
+                                                            className="form-control "
+                                                            autoComplete="off"
+                                                            onChange={(e) => ImageUpload(e)}
+                                                        />
+                                                    </div>
                                                 </div>
                                                 <div className="mt-2 pb-2 ">
                                                     <Button
@@ -103,6 +119,7 @@ function Subscription(props) {
                                                             SubscriptionDataArr.push({
                                                                 name: name,
                                                                 description: description,
+                                                                ImageUrl: ImageUrl,
                                                                 show: true,
                                                             });
                                                             setSubscriptionDataArr([...SubscriptionDataArr]);
@@ -146,7 +163,13 @@ function Subscription(props) {
                                         <div className="card_admissiondetails_height">
                                             <div className="textfiled_margin">
                                                 <Grid className="Component_main_grid mt-2">
-                                                    <Grid item md={4}>
+                                                    <Grid item md={1}>
+
+                                                        <div className=" p-2">
+                                                            <img src={item.ImageUrl} alt="" style={{ width: "30px" }} />
+                                                        </div>
+                                                    </Grid>
+                                                    <Grid item md={3}>
 
                                                         <div className=" p-2">
                                                             {item.name}
