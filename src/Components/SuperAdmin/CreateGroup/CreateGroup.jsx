@@ -110,10 +110,10 @@ function CreateGroup(props) {
                                                                     }}
                                                                 >
                                                                     <option value="">select sub-Cateory</option>
-                                                                    <option value="Cateory 1">Cateory 1</option>
-                                                                    <option value="Cateory 2">Cateory 2</option>
-                                                                    <option value="Cateory 3">Cateory 3</option>
-                                                                    <option value="Cateory 4">Cateory 4</option>
+                                                                    <option value="sub Cateory 1">sub Cateory 1</option>
+                                                                    <option value="sub Cateory 2">sub Cateory 2</option>
+                                                                    <option value="sub Cateory 3">sub Cateory 3</option>
+                                                                    <option value="sub Cateory 4">sub Cateory 4</option>
                                                                 </select>
                                                             </div>
                                                         </Grid>
@@ -249,13 +249,13 @@ function CreateGroup(props) {
                 </DialogTitle>
                 <DialogContent>
                     <div className="text_filed_heading">
-                        Subscription Name
+                        Group Name
                     </div>
                     <div className=" mt-1">
                         <input
                             type="text"
                             className="form-control "
-                            placeholder="Enter the Subscription Name"
+                            placeholder="Enter the group Name"
                             autoComplete="off"
                             value={Editname}
                             onChange={(e) => {
@@ -264,49 +264,45 @@ function CreateGroup(props) {
                         />
                     </div>
 
-                    <Grid className="Component_main_grid mt-2">
-                        <Grid item md={6}>
-                            <div className="text_filed_heading">
-                                Category
-                            </div>
-                            <div className="mr-2 mt-1">
-                                <select
-                                    class="form-control"
-                                    value={Editcatgory}
-                                    onChange={(e) => {
-                                        setEditcatgory(e.target.value);
-                                    }}
-                                >
-                                    <option value="">select Cateory</option>
-                                    <option value="Cateory 1">Cateory 1</option>
-                                    <option value="Cateory 2">Cateory 2</option>
-                                    <option value="Cateory 3">Cateory 3</option>
-                                    <option value="Cateory 4">Cateory 4</option>
-                                </select>
-                            </div>
-                        </Grid>
 
-                        <Grid item md={6}>
-                            <div className="text_filed_heading">
-                                Sub Category
-                            </div>
-                            <div className=" mt-1">
-                                <select
-                                    class="form-control"
-                                    value={Editsubcatgory}
-                                    onChange={(e) => {
-                                        setEditsubcatgory(e.target.value);
-                                    }}
-                                >
-                                    <option value="">select sub-Cateory</option>
-                                    <option value="Cateory 1">Cateory 1</option>
-                                    <option value="Cateory 2">Cateory 2</option>
-                                    <option value="Cateory 3">Cateory 3</option>
-                                    <option value="Cateory 4">Cateory 4</option>
-                                </select>
-                            </div>
-                        </Grid>
-                    </Grid>
+                    <div className="text_filed_heading">
+                        Category
+                    </div>
+                    <div className="mt-1">
+                        <select
+                            class="form-control"
+                            value={Editcatgory}
+                            onChange={(e) => {
+                                setEditcatgory(e.target.value);
+                            }}
+                        >
+                            <option value="">select Cateory</option>
+                            <option value="Cateory 1">Cateory 1</option>
+                            <option value="Cateory 2">Cateory 2</option>
+                            <option value="Cateory 3">Cateory 3</option>
+                            <option value="Cateory 4">Cateory 4</option>
+                        </select>
+                    </div>
+
+                    <div className="text_filed_heading">
+                        Sub Category
+                    </div>
+                    <div className=" mt-1">
+                        <select
+                            class="form-control"
+                            value={Editsubcatgory}
+                            onChange={(e) => {
+                                setEditsubcatgory(e.target.value);
+                            }}
+                        >
+                            <option value="">select sub-Cateory</option>
+                            <option value="sub Cateory 1">sub Cateory 1</option>
+                            <option value="sub Cateory 2">sub Cateory 2</option>
+                            <option value="sub Cateory 3">sub Cateory 3</option>
+                            <option value="sub Cateory 4">sub Cateory 4</option>
+                        </select>
+                    </div>
+
                 </DialogContent>
                 <DialogActions>
                     <Button

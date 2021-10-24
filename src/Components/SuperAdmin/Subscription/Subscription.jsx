@@ -32,6 +32,8 @@ function Subscription(props) {
 
     const ImageUpload = (e) => {
         setImageUrl(URL.createObjectURL(e.target.files[0]))
+        console.log("image  files::",e.target.files[0])
+        console.log("image url::", URL.createObjectURL(e.target.files[0]))
     }
     return (
         <>

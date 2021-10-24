@@ -8,9 +8,7 @@ import HOC from "../../../Common/HOC";
 import "./Subscription.css";
 
 function SubscriptionPoint(props) {
-
-    console.log("props:::::::", props)
-
+    
     let subscriptionName = props.location.state.item.name
 
     //local state

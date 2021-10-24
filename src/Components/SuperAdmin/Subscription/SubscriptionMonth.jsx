@@ -9,6 +9,8 @@ import "./Subscription.css";
 
 function SubscriptionMonth(props) {
 
+    let subscriptionName = props.location.state.item.name
+
     //local state
     const [addMangeopen, setaddMangeopen] = useState(false);
     const [month, setmonth] = useState("");
@@ -32,7 +34,7 @@ function SubscriptionMonth(props) {
         <>
             <div className="content_padding">
 
-                <div className="mb-3 page_heading">Manage Subscription Month</div>
+                <div className="mb-3 page_heading">Manage {subscriptionName} Month</div>
                 <Card className="pt-3 pb-4 Card_shadow">
                     <div className="card_admissiondetails_height">
                         <div className="textfiled_margin">
