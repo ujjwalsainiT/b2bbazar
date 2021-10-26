@@ -100,7 +100,7 @@ function Subscription(props) {
                                                 <div className="card_content_instition">
                                                     <div className="text-right">
                                                         <span className="icon_color hover_cursor">
-                                                            <i class="fa fa-times cursor" onClick={() => setaddMangeopen(!addMangeopen)}></i>
+                                                            <i className="fa fa-times cursor" onClick={() => setaddMangeopen(!addMangeopen)}></i>
                                                         </span>
                                                     </div>
                                                     <div className="text_filed_heading">
@@ -124,7 +124,7 @@ function Subscription(props) {
                                                     </div>
                                                     <div className=" mt-1">
                                                         <textarea
-                                                            class="form-control"
+                                                            className="form-control"
                                                             rows="3"
                                                             value={description}
                                                             onChange={(e) => {
@@ -259,7 +259,7 @@ function Subscription(props) {
                         className="float-right icon_color"
 
                     >
-                        <i class="fa fa-times hover_cursor" onClick={() => setEditDailogOpen(!EditDailogOpen)}></i>{" "}
+                        <i className="fa fa-times hover_cursor" onClick={() => setEditDailogOpen(!EditDailogOpen)}></i>{" "}
                     </span>
                 </DialogTitle>
                 <DialogContent>
@@ -284,7 +284,7 @@ function Subscription(props) {
                     </div>
                     <div className=" mt-1">
                         <textarea
-                            class="form-control"
+                            className="form-control"
                             rows="3"
                             value={Editdescription}
                             onChange={(e) => {
