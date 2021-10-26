@@ -50,7 +50,7 @@ function Subscription(props) {
                 return;
             }
 
-            let url = "https://whispering-earth-22757.herokuapp.com/addSubscription";
+            let url = "https://secure-plains-62142.herokuapp.com/addSubscription";
             let temp = {
                 name: name,
                 description: description,
