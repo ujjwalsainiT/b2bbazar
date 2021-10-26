@@ -25,6 +25,22 @@ function Subscription(props) {
 
     useEffect(() => {
         window.scrollTo(0, 0);
+
+        try {
+            let url = "https://secure-plains-62142.herokuapp.com/getSubscriptionDetails";
+            axios
+                .get(url)
+                .then(
+                    (res) => {
+                        console.log("get data", res)
+                    },
+                    (error) => {
+                        console.log("Error", error)
+                    }
+                )
+        } catch (error) {
+            console.log("Error", error)
+        }
     }, [])
 
 
