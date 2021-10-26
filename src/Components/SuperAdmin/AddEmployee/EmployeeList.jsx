@@ -17,13 +17,13 @@ import TablePagination from "@material-ui/core/TablePagination";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 
 
-function EmployeeList() {
+function EmployeeList(props) {
 
     //local state
     const classes = useStyles();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
-    const [EmployeeListArr, setEmployeeListArr] = useState([])
+    const [EmployeeListArr] = useState([])
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -38,8 +38,10 @@ function EmployeeList() {
         <>
             <div className="content_padding">
                 <div className="mb-3 page_heading">Employee List</div>
-                <Card className="p-3 mb-4 Card_shadow">
-
+                <Card className="p-3 Card_shadow">
+                    <div className="text-right">
+                        <span className="addEmployee_font" onClick={() => props.history.push("/add-employee")}> <i className="fa fa-plus-circle mr-1"></i> Add Employee</span>
+                    </div>
                     {/* --------------------list of users-------------- */}
                     <div className="table_foramtitng mt-2">
                         <TableContainer component={Paper}>
