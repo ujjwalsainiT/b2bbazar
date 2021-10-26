@@ -7,6 +7,10 @@ import HOC from "../../../Common/HOC";
 
 import "./Subscription.css";
 
+//for backend call
+import axios from "axios";
+import { blankValidator } from "../../../utils/Validation";
+
 function Subscription(props) {
 
     //local state
@@ -31,10 +35,46 @@ function Subscription(props) {
     }
 
     const ImageUpload = (e) => {
-        setImageUrl(URL.createObjectURL(e.target.files[0]))
-        console.log("image  files::",e.target.files[0])
-        console.log("image url::", URL.createObjectURL(e.target.files[0]))
+        setImageUrl(e.target.files[0])
+        console.log("image respose", e.target.files[0])
     }
+
+    const AddSubscriptionData = () => {
+        try {
+            if (!blankValidator(name)) {
+                alert("Enter the Subscription Name");
+                return;
+            }
+            if (!blankValidator(description)) {
+                alert("Enter the Description");
+                return;
+            }
+
+            let url = "https://whispering-earth-22757.herokuapp.com/addSubscription";
+            let temp = {
+                name: name,
+                description: description,
+                image: ImageUrl
+            };
+            console.log("data send", temp)
+            axios
+                .post(url, temp)
+                .then(
+                    (res) => {
+
+                        setname("");
+                        setdescription("");
+                        setImageUrl("");
+                        setaddMangeopen(!addMangeopen)
+                    },
+                    (error) => {
+                        console.log("Error", error)
+                    }
+                )
+        } catch (error) {
+            console.log("Error", error)
+        }
+    };
     return (
         <>
             <div className="content_padding">
@@ -109,26 +149,7 @@ function Subscription(props) {
                                                     <Button
                                                         variant="contained"
                                                         className="button_formatting"
-                                                        onClick={() => {
-                                                            if (name === "") {
-                                                                alert("Enter the Subscription Name");
-                                                                return;
-                                                            }
-                                                            if (description === "") {
-                                                                alert("Enter the Description");
-                                                                return;
-                                                            }
-                                                            SubscriptionDataArr.push({
-                                                                name: name,
-                                                                description: description,
-                                                                ImageUrl: ImageUrl,
-                                                                show: true,
-                                                            });
-                                                            setSubscriptionDataArr([...SubscriptionDataArr]);
-                                                            setname("");
-                                                            setdescription("");
-                                                            setaddMangeopen(!addMangeopen)
-                                                        }}
+                                                        onClick={AddSubscriptionData}
                                                     >
                                                         Create
                                                     </Button>
