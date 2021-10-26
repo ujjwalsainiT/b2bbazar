@@ -4,6 +4,8 @@ import "./App.css";
 
 //components
 import Login from "./Components/Login/Login";
+import AddEmployee from "./Components/SuperAdmin/AddEmployee/AddEmployee";
+import EmployeeList from "./Components/SuperAdmin/AddEmployee/EmployeeList";
 import Category from "./Components/SuperAdmin/Category/Category";
 import SubCategory from "./Components/SuperAdmin/Category/SubCategory";
 import CreateGroup from "./Components/SuperAdmin/CreateGroup/CreateGroup";
@@ -24,6 +26,8 @@ function App() {
         <Route exact path="/category" component={Category} />
         <Route exact path="/sub-category" component={SubCategory} />
         <Route exact path="/create-group" component={CreateGroup} />
+        <Route exact path="/add-employee" component={AddEmployee} />
+        <Route exact path="/employee-list" component={EmployeeList} />
       </Switch>
     </>
   );
