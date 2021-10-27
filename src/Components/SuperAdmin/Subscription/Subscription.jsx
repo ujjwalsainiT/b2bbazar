@@ -106,6 +106,9 @@ function Subscription(props) {
                         setaddMangeopen(!addMangeopen)
                         setisUpdated(!isUpdated)
                         setisloading(false)
+                        setname("");
+                        setdescription("");
+                        setprofile("")
                     },
                     (error) => {
                         setisloading(false)
@@ -166,6 +169,9 @@ function Subscription(props) {
                         setEditDailogOpen(!EditDailogOpen)
                         setisUpdated(!isUpdated)
                         setisloading(false)
+                        setEditname("");
+                        setEditdescription("");
+                        setEditprofile("")
                     },
                     (error) => {
                         console.log("Error", error)
