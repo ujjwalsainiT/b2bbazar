@@ -15,13 +15,15 @@ function Subscription(props) {
 
     //local state
     const [addMangeopen, setaddMangeopen] = useState(false);
-    const [name, setname] = useState("");
-    const [description, setdescription] = useState("");
-    const [ImageUrl, setImageUrl] = useState("")
     const [SubscriptionDataArr, setSubscriptionDataArr] = useState([]);
     const [EditDailogOpen, setEditDailogOpen] = useState(false);
     const [Editname, setEditname] = useState("");
     const [Editdescription, setEditdescription] = useState("")
+    const [InputFeilds, setInputFeilds] = useState({
+        name: "",
+        description: "",
+        profile: "",
+    });
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -51,36 +53,30 @@ function Subscription(props) {
     }
 
     const ImageUpload = (e) => {
-        setImageUrl(e.target.files[0])
-        console.log("image respose", e.target.files[0])
+
+        setInputFeilds({ ...InputFeilds, profile: e.target.files[0] })
+
+        console.log("image::::", e.target.files[0])
     }
 
+
+    const inputHandler = (e) => {
+        console.log("e.name::::", e.target.name)
+        setInputFeilds({ ...InputFeilds, [e.target.name]: e.target.value })
+    }
     const AddSubscriptionData = () => {
         try {
-            if (!blankValidator(name)) {
-                alert("Enter the Subscription Name");
-                return;
-            }
-            if (!blankValidator(description)) {
-                alert("Enter the Description");
-                return;
-            }
-
             let url = "https://secure-plains-62142.herokuapp.com/addSubscription";
-            let temp = {
-                name: name,
-                description: description,
-                image: ImageUrl
-            };
-            console.log("data send", temp)
+            const fd = new FormData();
+            fd.append('name', InputFeilds.name)
+            fd.append('description', InputFeilds.description)
+            fd.append('profile', InputFeilds.profile, InputFeilds.profile.name)
+            console.log("data send", fd)
             axios
-                .post(url, temp)
+                .post(url, fd)
                 .then(
                     (res) => {
 
-                        setname("");
-                        setdescription("");
-                        setImageUrl("");
                         setaddMangeopen(!addMangeopen)
                     },
                     (error) => {
@@ -128,10 +124,9 @@ function Subscription(props) {
                                                             className="form-control "
                                                             placeholder="Enter the Subscription Name"
                                                             autoComplete="off"
-                                                            value={name}
-                                                            onChange={(e) => {
-                                                                setname(e.target.value);
-                                                            }}
+                                                            name="name"
+                                                            value={InputFeilds.name}
+                                                            onChange={(e) => inputHandler(e)}
                                                         />
                                                     </div>
 
@@ -142,10 +137,9 @@ function Subscription(props) {
                                                         <textarea
                                                             className="form-control"
                                                             rows="3"
-                                                            value={description}
-                                                            onChange={(e) => {
-                                                                setdescription(e.target.value)
-                                                            }}
+                                                            name="description"
+                                                            value={InputFeilds.description}
+                                                            onChange={(e) => inputHandler(e)}
                                                         ></textarea>
                                                     </div>
 
@@ -157,6 +151,7 @@ function Subscription(props) {
                                                             type="file"
                                                             className="form-control "
                                                             autoComplete="off"
+                                                            name='profile'
                                                             onChange={(e) => ImageUpload(e)}
                                                         />
                                                     </div>
