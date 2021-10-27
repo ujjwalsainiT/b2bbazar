@@ -15,35 +15,45 @@ function Subscription(props) {
 
     //local state
     const [addMangeopen, setaddMangeopen] = useState(false);
+    const [name, setname] = useState("");
+    const [description, setdescription] = useState("");
+    const [profile, setprofile] = useState("");
     const [SubscriptionDataArr, setSubscriptionDataArr] = useState([]);
     const [EditDailogOpen, setEditDailogOpen] = useState(false);
     const [Editname, setEditname] = useState("");
     const [Editdescription, setEditdescription] = useState("")
-    const [InputFeilds, setInputFeilds] = useState({
-        name: "",
-        description: "",
-        profile: "",
-    });
+    const [isUpdated, setisUpdated] = useState(false)
+
+    //errors
+    const [nameError, setnameError] = useState(false);
+    const [descriptionError, setdescriptionError] = useState(false);
+    const [profileError, setprofileError] = useState(false);
+
 
     useEffect(() => {
         window.scrollTo(0, 0);
 
-        try {
-            let url = "https://secure-plains-62142.herokuapp.com/getSubscriptionDetails";
-            axios
-                .get(url)
-                .then(
-                    (res) => {
-                        console.log("get data", res)
-                    },
-                    (error) => {
-                        console.log("Error", error)
-                    }
-                )
-        } catch (error) {
-            console.log("Error", error)
+        //to get data of subscription
+        const getsubscriptiondata = () => {
+            try {
+                let url = "https://secure-plains-62142.herokuapp.com/getSubscriptionDetails";
+                axios
+                    .get(url)
+                    .then(
+                        (res) => {
+                            console.log("get data", res)
+                            setSubscriptionDataArr(res.data.data)
+                        },
+                        (error) => {
+                            console.log("Error", error)
+                        }
+                    )
+            } catch (error) {
+                console.log("Error", error)
+            }
         }
-    }, [])
+        getsubscriptiondata();
+    }, [isUpdated])
 
 
     const OpenEditDailog = (data) => {
@@ -52,32 +62,34 @@ function Subscription(props) {
         setEditDailogOpen(!EditDailogOpen)
     }
 
-    const ImageUpload = (e) => {
 
-        setInputFeilds({ ...InputFeilds, profile: e.target.files[0] })
-
-        console.log("image::::", e.target.files[0])
-    }
-
-
-    const inputHandler = (e) => {
-        console.log("e.name::::", e.target.name)
-        setInputFeilds({ ...InputFeilds, [e.target.name]: e.target.value })
-    }
+    //to addd new subscription
     const AddSubscriptionData = () => {
         try {
+            if (!blankValidator(name)) {
+                setnameError(true)
+                return;
+            }
+            if (!blankValidator(description)) {
+                setdescriptionError(true)
+                return;
+            }
+            if (!blankValidator(profile)) {
+                setprofileError(true)
+                return;
+            }
             let url = "https://secure-plains-62142.herokuapp.com/addSubscription";
             const fd = new FormData();
-            fd.append('name', InputFeilds.name)
-            fd.append('description', InputFeilds.description)
-            fd.append('profile', InputFeilds.profile, InputFeilds.profile.name)
-            console.log("data send", fd)
+            fd.append('name', name)
+            fd.append('description', description)
+            fd.append('myField', profile, profile.name)
             axios
                 .post(url, fd)
                 .then(
                     (res) => {
-
+                        console.log("response daata:::", res)
                         setaddMangeopen(!addMangeopen)
+                        setisUpdated(!isUpdated)
                     },
                     (error) => {
                         console.log("Error", error)
@@ -124,10 +136,15 @@ function Subscription(props) {
                                                             className="form-control "
                                                             placeholder="Enter the Subscription Name"
                                                             autoComplete="off"
-                                                            name="name"
-                                                            value={InputFeilds.name}
-                                                            onChange={(e) => inputHandler(e)}
+                                                            value={name}
+                                                            onChange={(e) => {
+                                                                setnameError(false)
+                                                                setname(e.target.value)
+                                                            }}
                                                         />
+                                                        {nameError && (
+                                                            <span className="text-danger">Enter the Name</span>
+                                                        )}
                                                     </div>
 
                                                     <div className="text_filed_heading">
@@ -138,9 +155,14 @@ function Subscription(props) {
                                                             className="form-control"
                                                             rows="3"
                                                             name="description"
-                                                            value={InputFeilds.description}
-                                                            onChange={(e) => inputHandler(e)}
+                                                            onChange={(e) => {
+                                                                setdescriptionError(false)
+                                                                setdescription(e.target.value)
+                                                            }}
                                                         ></textarea>
+                                                        {descriptionError && (
+                                                            <span className="text-danger">Enter the Description</span>
+                                                        )}
                                                     </div>
 
                                                     <div className="text_filed_heading">
@@ -151,9 +173,14 @@ function Subscription(props) {
                                                             type="file"
                                                             className="form-control "
                                                             autoComplete="off"
-                                                            name='profile'
-                                                            onChange={(e) => ImageUpload(e)}
+                                                            onChange={(e) => {
+                                                                setprofileError(false)
+                                                                setprofile(e.target.files[0])
+                                                            }}
                                                         />
+                                                        {profileError && (
+                                                            <span className="text-danger">Select the Picture</span>
+                                                        )}
                                                     </div>
                                                 </div>
                                                 <div className="mt-2 pb-2 ">
@@ -200,7 +227,7 @@ function Subscription(props) {
                                                     <Grid item md={1}>
 
                                                         <div className=" p-2">
-                                                            <img src={item.ImageUrl} alt="" style={{ width: "30px" }} />
+                                                            <img src={`https://secure-plains-62142.herokuapp.com/public/images/${item.profile}`} alt="" style={{ width: "60px", height: "40px" }} />
                                                         </div>
                                                     </Grid>
                                                     <Grid item md={3}>
