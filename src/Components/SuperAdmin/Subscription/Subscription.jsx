@@ -233,7 +233,7 @@ function Subscription(props) {
                                                         <textarea
                                                             className="form-control"
                                                             rows="3"
-                                                            name="description"
+                                                            value={description}
                                                             onChange={(e) => {
                                                                 setdescriptionError(false)
                                                                 setdescription(e.target.value)
