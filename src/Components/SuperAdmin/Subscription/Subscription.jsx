@@ -10,6 +10,7 @@ import "./Subscription.css";
 //for backend call
 import axios from "axios";
 import { getBaseUrl } from "../../../utils";
+import Loder from '../../../Loder/Loder';
 import { blankValidator } from "../../../utils/Validation";
 
 function Subscription(props) {
@@ -23,7 +24,11 @@ function Subscription(props) {
     const [EditDailogOpen, setEditDailogOpen] = useState(false);
     const [Editname, setEditname] = useState("");
     const [Editdescription, setEditdescription] = useState("")
+    const [EditSubscriptionId, setEditSubscriptionId] = useState("")
+    const [Editprofile, setEditprofile] = useState("")
+    const [EditProfileName, setEditProfileName] = useState("")
     const [isUpdated, setisUpdated] = useState(false)
+    const [isloading, setisloading] = useState(false)
 
     //errors
     const [nameError, setnameError] = useState(false);
@@ -37,6 +42,7 @@ function Subscription(props) {
         //to get data of subscription
         const getsubscriptiondata = () => {
             try {
+                setisloading(true)
                 let url = getBaseUrl() + "getSubscriptionDetails";
                 axios
                     .get(url)
@@ -44,12 +50,15 @@ function Subscription(props) {
                         (res) => {
                             console.log("get data", res)
                             setSubscriptionDataArr(res.data.data)
+                            setisloading(false)
                         },
                         (error) => {
+                            setisloading(false)
                             console.log("Error", error)
                         }
                     )
             } catch (error) {
+                setisloading(false)
                 console.log("Error", error)
             }
         }
@@ -60,6 +69,8 @@ function Subscription(props) {
     const OpenEditDailog = (data) => {
         setEditname(data.name);
         setEditdescription(data.description);
+        setEditSubscriptionId(data._id)
+        setEditProfileName(data.profile)
         setEditDailogOpen(!EditDailogOpen)
     }
 
@@ -79,6 +90,9 @@ function Subscription(props) {
                 setprofileError(true)
                 return;
             }
+
+            setisloading(true)
+
             let url = getBaseUrl() + "addSubscription";
             const fd = new FormData();
             fd.append('name', name)
@@ -91,12 +105,15 @@ function Subscription(props) {
                         console.log("response daata:::", res)
                         setaddMangeopen(!addMangeopen)
                         setisUpdated(!isUpdated)
+                        setisloading(false)
                     },
                     (error) => {
+                        setisloading(false)
                         console.log("Error", error)
                     }
                 )
         } catch (error) {
+            setisloading(false)
             console.log("Error", error)
         }
     };
@@ -107,6 +124,7 @@ function Subscription(props) {
         //subscription id
         let id = data._id
         try {
+            setisloading(true)
             let url = getBaseUrl() + `deleteSubscription/${id}`;
             axios
                 .get(url)
@@ -114,121 +132,156 @@ function Subscription(props) {
                     (res) => {
                         console.log("get data", res)
                         setisUpdated(!isUpdated)
+                        setisloading(false)
                     },
                     (error) => {
+                        setisloading(false)
                         console.log("Error", error)
                     }
                 )
         } catch (error) {
+            setisloading(false)
             console.log("Error", error)
         }
     }
 
 
-return (
-    <>
-        <div className="content_padding">
+    //To Update the data of subscripion
 
-            <div className="mb-3 page_heading">Manage Subscription</div>
-            <Card className="pt-3 pb-4 Card_shadow">
-                <div className="card_admissiondetails_height">
-                    <div className="textfiled_margin">
-                        {!addMangeopen ? (
-                            <div className="d-flex">
-                                <span className="icon_color">
-                                    <i className="fa fa-plus-circle"></i>
-                                </span>
-                                <span className="mt-1 ml-2 addmanageuserfont hover_cursor" onClick={() => setaddMangeopen(!addMangeopen)}>
-                                    <strong> Add New Subscription</strong>
-                                </span>
-                            </div>
-                        ) : (
-                            <Expand open={addMangeopen}>
-                                <Card className=" mb-2 Card_shadow">
-                                    <div className="card_admissiondetails_height">
-                                        <div className="textfiled_margin">
-                                            <div className="card_content_instition">
-                                                <div className="text-right">
-                                                    <span className="icon_color hover_cursor">
-                                                        <i className="fa fa-times cursor" onClick={() => setaddMangeopen(!addMangeopen)}></i>
-                                                    </span>
-                                                </div>
-                                                <div className="text_filed_heading">
-                                                    Subscription Name
-                                                </div>
-                                                <div className=" mt-1">
-                                                    <input
-                                                        type="text"
-                                                        className="form-control "
-                                                        placeholder="Enter the Subscription Name"
-                                                        autoComplete="off"
-                                                        value={name}
-                                                        onChange={(e) => {
-                                                            setnameError(false)
-                                                            setname(e.target.value)
-                                                        }}
-                                                    />
-                                                    {nameError && (
-                                                        <span className="text-danger">Enter the Name</span>
-                                                    )}
-                                                </div>
+    const updateSubscriptiondata = (ID) => {
+        //subscription id
+        let id = ID
+        try {
+            setisloading(true)
+            let url = getBaseUrl() + `updateSubscription/${id}`;
+            const fd = new FormData();
+            fd.append('name', Editname)
+            fd.append('description', Editdescription)
+            fd.append('myField', Editprofile, Editprofile.name)
+            axios
+                .post(url, fd)
+                .then(
+                    (res) => {
+                        console.log("response daata:::", res)
+                        setEditDailogOpen(!EditDailogOpen)
+                        setisUpdated(!isUpdated)
+                        setisloading(false)
+                    },
+                    (error) => {
+                        console.log("Error", error)
+                        setisloading(false)
+                    }
+                )
+        } catch (error) {
+            console.log("Error", error)
+            setisloading(false)
+        }
+    }
 
-                                                <div className="text_filed_heading">
-                                                    Description
-                                                </div>
-                                                <div className=" mt-1">
-                                                    <textarea
-                                                        className="form-control"
-                                                        rows="3"
-                                                        name="description"
-                                                        onChange={(e) => {
-                                                            setdescriptionError(false)
-                                                            setdescription(e.target.value)
-                                                        }}
-                                                    ></textarea>
-                                                    {descriptionError && (
-                                                        <span className="text-danger">Enter the Description</span>
-                                                    )}
-                                                </div>
+    return (
+        <>
+            <div className="content_padding">
 
-                                                <div className="text_filed_heading">
-                                                    Subscription Image
+                <div className="mb-3 page_heading">Manage Subscription</div>
+                <Card className="pt-3 pb-4 Card_shadow">
+                    <div className="card_admissiondetails_height">
+                        <div className="textfiled_margin">
+                            {!addMangeopen ? (
+                                <div className="d-flex">
+                                    <span className="icon_color">
+                                        <i className="fa fa-plus-circle"></i>
+                                    </span>
+                                    <span className="mt-1 ml-2 addmanageuserfont hover_cursor" onClick={() => setaddMangeopen(!addMangeopen)}>
+                                        <strong> Add New Subscription</strong>
+                                    </span>
+                                </div>
+                            ) : (
+                                <Expand open={addMangeopen}>
+                                    <Card className=" mb-2 Card_shadow">
+                                        <div className="card_admissiondetails_height">
+                                            <div className="textfiled_margin">
+                                                <div className="card_content_instition">
+                                                    <div className="text-right">
+                                                        <span className="icon_color hover_cursor">
+                                                            <i className="fa fa-times cursor" onClick={() => setaddMangeopen(!addMangeopen)}></i>
+                                                        </span>
+                                                    </div>
+                                                    <div className="text_filed_heading">
+                                                        Subscription Name
+                                                    </div>
+                                                    <div className=" mt-1">
+                                                        <input
+                                                            type="text"
+                                                            className="form-control "
+                                                            placeholder="Enter the Subscription Name"
+                                                            autoComplete="off"
+                                                            value={name}
+                                                            onChange={(e) => {
+                                                                setnameError(false)
+                                                                setname(e.target.value)
+                                                            }}
+                                                        />
+                                                        {nameError && (
+                                                            <span className="text-danger">Enter the Name</span>
+                                                        )}
+                                                    </div>
+
+                                                    <div className="text_filed_heading">
+                                                        Description
+                                                    </div>
+                                                    <div className=" mt-1">
+                                                        <textarea
+                                                            className="form-control"
+                                                            rows="3"
+                                                            name="description"
+                                                            onChange={(e) => {
+                                                                setdescriptionError(false)
+                                                                setdescription(e.target.value)
+                                                            }}
+                                                        ></textarea>
+                                                        {descriptionError && (
+                                                            <span className="text-danger">Enter the Description</span>
+                                                        )}
+                                                    </div>
+
+                                                    <div className="text_filed_heading">
+                                                        Subscription Image
+                                                    </div>
+                                                    <div className=" mt-1">
+                                                        <input
+                                                            type="file"
+                                                            className="form-control "
+                                                            autoComplete="off"
+                                                            onChange={(e) => {
+                                                                setprofileError(false)
+                                                                setprofile(e.target.files[0])
+                                                            }}
+                                                        />
+                                                        {profileError && (
+                                                            <span className="text-danger">Select the Picture</span>
+                                                        )}
+                                                    </div>
                                                 </div>
-                                                <div className=" mt-1">
-                                                    <input
-                                                        type="file"
-                                                        className="form-control "
-                                                        autoComplete="off"
-                                                        onChange={(e) => {
-                                                            setprofileError(false)
-                                                            setprofile(e.target.files[0])
-                                                        }}
-                                                    />
-                                                    {profileError && (
-                                                        <span className="text-danger">Select the Picture</span>
-                                                    )}
+                                                <div className="mt-2 pb-2 ">
+                                                    <Button
+                                                        variant="contained"
+                                                        className="button_formatting"
+                                                        onClick={AddSubscriptionData}
+                                                    >
+                                                        Create
+                                                    </Button>
                                                 </div>
-                                            </div>
-                                            <div className="mt-2 pb-2 ">
-                                                <Button
-                                                    variant="contained"
-                                                    className="button_formatting"
-                                                    onClick={AddSubscriptionData}
-                                                >
-                                                    Create
-                                                </Button>
                                             </div>
                                         </div>
-                                    </div>
-                                </Card>
-                            </Expand>
-                        )}
+                                    </Card>
+                                </Expand>
+                            )}
+                        </div>
                     </div>
-                </div>
 
-                <div className="card_admissiondetails_height mt-4">
-                    <div className="textfiled_margin cardheight_overflow">
-                        {/* <div className="d-flex justify-content-between">
+                    <div className="card_admissiondetails_height mt-4">
+                        <div className="textfiled_margin cardheight_overflow">
+                            {/* <div className="d-flex justify-content-between">
                                 <div className=" mt-1 mb-1">
                                     <strong> Subsciption Name</strong>
                                 </div>
@@ -243,136 +296,168 @@ return (
                                 </div>
 
                             </div> */}
-                        <hr />
-                        {SubscriptionDataArr.length > 0 ?
-                            (SubscriptionDataArr.map((item, index) => (
-                                <Card className="Card_shadow mb-2 mt-2">
-                                    <div className="card_admissiondetails_height">
-                                        <div className="textfiled_margin">
-                                            <Grid className="Component_main_grid mt-2">
-                                                <Grid item md={1}>
+                            <hr />
+                            {SubscriptionDataArr.length > 0 ?
+                                (SubscriptionDataArr.map((item, index) => (
+                                    <Card className="Card_shadow mb-2 mt-2">
+                                        <div className="card_admissiondetails_height">
+                                            <div className="textfiled_margin">
+                                                <Grid className="Component_main_grid mt-2">
+                                                    <Grid item md={1}>
 
-                                                    <div className=" p-2">
-                                                        <img src={`https://secure-plains-62142.herokuapp.com/public/images/${item.profile}`} alt="" style={{ width: "60px", height: "40px" }} />
-                                                    </div>
-                                                </Grid>
-                                                <Grid item md={3}>
+                                                        <div className=" p-2">
+                                                            <img src={`https://secure-plains-62142.herokuapp.com/public/images/${item.profile}`} alt="" style={{ width: "60px", height: "40px" }} />
+                                                        </div>
+                                                    </Grid>
+                                                    <Grid item md={3}>
 
-                                                    <div className=" p-2">
-                                                        {item.name}
-                                                    </div>
-                                                </Grid>
-                                                <Grid item md={4}>
-                                                    <div className="p-2">
-                                                        {item.description}
-                                                    </div>
-                                                </Grid>
-                                                <Grid item md={4}>
-                                                    <div className="d-flex p-2">
+                                                        <div className=" p-2">
+                                                            {item.name}
+                                                        </div>
+                                                    </Grid>
+                                                    <Grid item md={4}>
+                                                        <div className="p-2">
+                                                            {item.description}
+                                                        </div>
+                                                    </Grid>
+                                                    <Grid item md={4}>
+                                                        <div className="d-flex p-2">
 
-                                                        <span className="action_icon mr-2 ml-1">
-                                                            <i
-                                                                className="fa fa-pencil"
-                                                                onClick={() => OpenEditDailog(item)}
-                                                            ></i>
-                                                        </span>
-                                                        <span className="action_icon ml-2">
-                                                            <i
-                                                                className="fa fa-trash "
-                                                                onClick={() =>
-                                                                    DeleteSubcription(item)
-                                                                }
-                                                            ></i>
-                                                        </span>
-                                                        <span className="action_icon  ml-2" onClick={() => props.history.push("/subscription-point", {
-                                                            item
-                                                        })}>
-                                                            Manage Points
-                                                        </span>
+                                                            <span className="action_icon mr-2 ml-1">
+                                                                <i
+                                                                    className="fa fa-pencil"
+                                                                    onClick={() => OpenEditDailog(item)}
+                                                                ></i>
+                                                            </span>
+                                                            <span className="action_icon ml-2">
+                                                                <i
+                                                                    className="fa fa-trash "
+                                                                    onClick={() =>
+                                                                        DeleteSubcription(item)
+                                                                    }
+                                                                ></i>
+                                                            </span>
+                                                            <span className="action_icon  ml-2" onClick={() => props.history.push("/subscription-point", {
+                                                                item
+                                                            })}>
+                                                                Manage Points
+                                                            </span>
 
-                                                        <span className="action_icon  ml-2" onClick={() => props.history.push("/subscription-month", {
-                                                            item
-                                                        })}>
-                                                            Manage Months
-                                                        </span>
-                                                    </div>
+                                                            <span className="action_icon  ml-2" onClick={() => props.history.push("/subscription-month", {
+                                                                item
+                                                            })}>
+                                                                Manage Months
+                                                            </span>
+                                                        </div>
+                                                    </Grid>
                                                 </Grid>
-                                            </Grid>
+                                            </div>
                                         </div>
-                                    </div>
-                                </Card>
-                            )))
-                            : (
-                                <span>No Data</span>
-                            )}
+                                    </Card>
+                                )))
+                                : (
+                                    <span>No Data</span>
+                                )}
+                        </div>
                     </div>
-                </div>
-            </Card>
-        </div>
+                </Card>
+            </div>
 
-        <Dialog
-            open={EditDailogOpen}
-            aria-labelledby="form-dialog-title"
-            maxWidth="sm"
-            fullWidth="fullWidth"
-        >
-            <DialogTitle>
-                Edit Subscription
-                <span
-                    className="float-right icon_color"
+            <Dialog
+                open={EditDailogOpen}
+                aria-labelledby="form-dialog-title"
+                maxWidth="sm"
+                fullWidth="fullWidth"
+            >
+                <DialogTitle>
+                    Edit Subscription
+                    <span
+                        className="float-right icon_color"
 
-                >
-                    <i className="fa fa-times hover_cursor" onClick={() => setEditDailogOpen(!EditDailogOpen)}></i>{" "}
-                </span>
-            </DialogTitle>
-            <DialogContent>
-                <div className="text_filed_heading">
-                    Subscription Name
-                </div>
-                <div className=" mt-1">
-                    <input
-                        type="text"
-                        className="form-control "
-                        placeholder="Enter the Subscription Name"
-                        autoComplete="off"
-                        value={Editname}
-                        onChange={(e) => {
-                            setEditname(e.target.value);
-                        }}
-                    />
-                </div>
+                    >
+                        <i className="fa fa-times hover_cursor" onClick={() => setEditDailogOpen(!EditDailogOpen)}></i>{" "}
+                    </span>
+                </DialogTitle>
+                <DialogContent>
+                    <div className="text_filed_heading">
+                        Subscription Name
+                    </div>
+                    <div className=" mt-1">
+                        <input
+                            type="text"
+                            className="form-control "
+                            placeholder="Enter the Subscription Name"
+                            autoComplete="off"
+                            value={Editname}
+                            onChange={(e) => {
+                                setEditname(e.target.value);
+                            }}
+                        />
+                    </div>
 
-                <div className="text_filed_heading">
-                    Description
-                </div>
-                <div className=" mt-1">
-                    <textarea
-                        className="form-control"
-                        rows="3"
-                        value={Editdescription}
-                        onChange={(e) => {
-                            setEditdescription(e.target.value)
-                        }}
-                    ></textarea>
+                    <div className="text_filed_heading">
+                        Description
+                    </div>
+                    <div className=" mt-1">
+                        <textarea
+                            className="form-control"
+                            rows="3"
+                            value={Editdescription}
+                            onChange={(e) => {
+                                setEditdescription(e.target.value)
+                            }}
+                        ></textarea>
+                    </div>
 
-                </div>
-            </DialogContent>
-            <DialogActions>
-                <Button
-                    className="button_formatting"
-                    onClick={() => setEditDailogOpen(!EditDailogOpen)}
-                >
-                    Cancel
-                </Button>
-                <Button
-                    className="button_formatting"
-                >
-                    Save{" "}
-                </Button>
-            </DialogActions>
-        </Dialog>
-    </>
-)
+                    <div className="text_filed_heading">
+                        Subscription Image
+                    </div>
+                    <div className=" mt-1">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="fa fa-paperclip"></i>
+                                </span>
+                            </div>
+                            <div class="custom-file">
+                                <input
+                                    type="file"
+                                    class="custom-file-input"
+                                    onChange={(e) => {
+                                        setEditprofile(e.target.files[0])
+                                        setEditProfileName(e.target.files[0].name)
+                                    }}
+                                />
+                                <label
+                                    class="custom-file-label"
+                                    for="inputGroupFile01"
+                                >
+                                    {EditProfileName}
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        className="button_formatting"
+                        onClick={() => setEditDailogOpen(!EditDailogOpen)}
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        className="button_formatting"
+                        onClick={() => updateSubscriptiondata(EditSubscriptionId)}
+                    >
+                        Save{" "}
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            <Loder loading={isloading} />
+        </>
+    )
 }
 
 export default HOC(Subscription)
