@@ -75,6 +75,18 @@ function CreateGroup(props) {
                                                             }}
                                                         />
                                                     </div>
+                                                    <div className="text_filed_heading">
+                                                        Group Image
+                                                    </div>
+                                                    <div className=" mt-1">
+                                                        <input
+                                                            type="file"
+                                                            className="form-control "
+                                                            autoComplete="off"
+
+                                                        />
+
+                                                    </div>
                                                     <Grid className="Component_main_grid mt-2">
                                                         <Grid item md={6}>
                                                             <div className="text_filed_heading">

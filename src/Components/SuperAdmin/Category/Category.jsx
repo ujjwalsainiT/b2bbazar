@@ -7,7 +7,7 @@ import HOC from "../../../Common/HOC";
 
 import "./Category.css";
 
-function Category() {
+function Category(props) {
 
     //local state
     const [addMangeopen, setaddMangeopen] = useState(false);
@@ -153,7 +153,9 @@ function Category() {
                                                                 }}
                                                             ></i>
                                                         </span>
-
+                                                        <span className="action_icon ml-2" onClick={() => props.history.push("/sub-category")}>
+                                                            Manage subcategory
+                                                        </span>
                                                     </div>
 
                                                 </div>
