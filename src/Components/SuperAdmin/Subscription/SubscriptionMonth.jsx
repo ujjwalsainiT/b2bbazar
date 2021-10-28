@@ -11,7 +11,7 @@ import "./Subscription.css";
 import axios from "axios";
 import { getBaseUrl } from "../../../utils";
 import Loder from '../../../Loder/Loder';
-import { showNotificationMsz } from "../../../utils/Validation";
+import { blankValidator, showNotificationMsz } from "../../../utils/Validation";
 
 function SubscriptionMonth(props) {
 
@@ -31,6 +31,11 @@ function SubscriptionMonth(props) {
     const [Editprice, setEditprice] = useState("");
     const [isloading, setisloading] = useState(false)
     const [isUpdated, setisUpdated] = useState(false)
+    const [EditSubscriptionMonthId, setEditSubscriptionMonthId] = useState("")
+
+    //Error
+    const [monthError, setmonthError] = useState(false)
+    const [priceError, setpriceError] = useState(false)
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -63,8 +68,91 @@ function SubscriptionMonth(props) {
     const OpenEditDailog = (data) => {
         setEditmonth(data.month);
         setEditprice(data.price);
+        setEditSubscriptionMonthId(data._id)
         setEditDailogOpen(!EditDailogOpen)
     }
+
+    //to add new subscription point
+    const AddSubscriptionMonthData = () => {
+        try {
+
+            if (!blankValidator(month)) {
+                setmonthError(true)
+                return
+            }
+            if (!blankValidator(price)) {
+                setpriceError(true)
+                return
+            }
+            setisloading(true)
+            let url = getBaseUrl() + `addSubscriptionMonth/${subcriptionId}`;
+            let temp = {
+                subcriptionId,
+                month: month,
+                price: price
+            }
+            axios
+                .post(url, temp)
+                .then(
+                    (res) => {
+                        setaddMangeopen(!addMangeopen)
+                        setisUpdated(!isUpdated)
+                        setisloading(false)
+                        setmonth("");
+                        setprice("");
+                        setaddMangeopen(!addMangeopen)
+                        showNotificationMsz(res.data.msg, "success")
+                    },
+                    (error) => {
+                        setisloading(false)
+                        showNotificationMsz(error, "danger")
+                    }
+                )
+        } catch (error) {
+            setisloading(false)
+            showNotificationMsz(error, "danger")
+        }
+    };
+
+
+    //To Update the data of subscripion
+
+    const updateSubscriptionpointdata = (ID) => {
+        //subscription id
+        let id = ID
+        try {
+            setisloading(true)
+            let url = getBaseUrl() + `updateSubscriptionMonth/${id}`;
+            let temp = {
+                month: Editmonth,
+                price: Editprice
+            }
+            axios
+                .post(url, temp)
+                .then(
+                    (res) => {
+                        console.log("response daata:::", res)
+                        setEditDailogOpen(!EditDailogOpen)
+                        setisUpdated(!isUpdated)
+                        setisloading(false)
+                        setEditmonth("");
+                        setEditprice("");
+                        showNotificationMsz(res.data.msg, "success")
+                    },
+                    (error) => {
+                        console.log("Error", error)
+                        showNotificationMsz(error, "danger")
+                        setisloading(false)
+                    }
+                )
+        } catch (error) {
+            console.log("Error", error)
+            showNotificationMsz(error, "danger")
+            setisloading(false)
+        }
+    }
+
+
     return (
         <>
             <div className="content_padding">
@@ -104,9 +192,16 @@ function SubscriptionMonth(props) {
                                                             autoComplete="off"
                                                             value={month}
                                                             onChange={(e) => {
-                                                                setmonth(e.target.value);
+                                                                setmonthError(false)
+                                                                const re = /^[0-9\b]+$/;
+                                                                if (e.target.value === '' || re.test(e.target.value)) {
+                                                                    setmonth(e.target.value);
+                                                                }
                                                             }}
                                                         />
+                                                        {monthError && (
+                                                            <span className="text-danger">Enter the Month</span>
+                                                        )}
                                                     </div>
 
                                                     <div className="text_filed_heading">
@@ -120,9 +215,16 @@ function SubscriptionMonth(props) {
                                                             autoComplete="off"
                                                             value={price}
                                                             onChange={(e) => {
-                                                                setprice(e.target.value)
+                                                                setpriceError(false)
+                                                                const re = /^[0-9\b]+$/;
+                                                                if (e.target.value === '' || re.test(e.target.value)) {
+                                                                    setprice(e.target.value)
+                                                                }
                                                             }}
                                                         />
+                                                         {priceError && (
+                                                            <span className="text-danger">Enter the Price</span>
+                                                        )}
                                                     </div>
 
                                                 </div>
@@ -130,25 +232,7 @@ function SubscriptionMonth(props) {
                                                     <Button
                                                         variant="contained"
                                                         className="button_formatting"
-                                                        onClick={() => {
-                                                            if (month === "") {
-                                                                alert("Enter the Month");
-                                                                return;
-                                                            }
-                                                            if (price === "") {
-                                                                alert("Enter the Price");
-                                                                return;
-                                                            }
-                                                            SubscriptionDataArr.push({
-                                                                month: month,
-                                                                price: price,
-
-                                                            });
-                                                            setSubscriptionDataArr([...SubscriptionDataArr]);
-                                                            setmonth("");
-                                                            setprice("");
-                                                            setaddMangeopen(!addMangeopen)
-                                                        }}
+                                                        onClick={AddSubscriptionMonthData}
                                                     >
                                                         Create
                                                     </Button>
@@ -287,6 +371,7 @@ function SubscriptionMonth(props) {
                     </Button>
                     <Button
                         className="button_formatting"
+                        onClick={() => updateSubscriptionpointdata(EditSubscriptionMonthId)}
                     >
                         Save{" "}
                     </Button>

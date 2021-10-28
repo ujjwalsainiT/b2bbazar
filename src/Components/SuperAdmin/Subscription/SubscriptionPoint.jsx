@@ -11,7 +11,7 @@ import "./Subscription.css";
 import axios from "axios";
 import { getBaseUrl } from "../../../utils";
 import Loder from '../../../Loder/Loder';
-import { showNotificationMsz } from "../../../utils/Validation";
+import { blankValidator, showNotificationMsz } from "../../../utils/Validation";
 
 function SubscriptionPoint(props) {
 
@@ -32,6 +32,9 @@ function SubscriptionPoint(props) {
     const [EditSubscriptionPointId, setEditSubscriptionPointId] = useState("")
     const [isloading, setisloading] = useState(false)
     const [isUpdated, setisUpdated] = useState(false)
+
+    //Error
+    const [pointError, setpointError] = useState(false)
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -71,6 +74,10 @@ function SubscriptionPoint(props) {
     //to add new subscription point
     const AddSubscriptionPointData = () => {
         try {
+            if (!blankValidator(point)) {
+                setpointError(true);
+                return;
+            }
             setisloading(true)
             let url = getBaseUrl() + `addSubscriptionPoints/${subcriptionId}`;
             let temp = {
@@ -120,8 +127,6 @@ function SubscriptionPoint(props) {
                 .post(url, temp)
                 .then(
                     (res) => {
-                        console.log("response daata:::", res)
-                        //alert(res.data.msg)
                         setEditDailogOpen(!EditDailogOpen)
                         setisUpdated(!isUpdated)
                         setisloading(false)
@@ -130,7 +135,6 @@ function SubscriptionPoint(props) {
                         showNotificationMsz(res.data.msg, "success")
                     },
                     (error) => {
-                        console.log("Error", error)
                         showNotificationMsz(error, "danger")
                         setisloading(false)
                     }
@@ -141,6 +145,8 @@ function SubscriptionPoint(props) {
             setisloading(false)
         }
     }
+
+
     return (
         <>
             <div className="content_padding">
@@ -180,9 +186,13 @@ function SubscriptionPoint(props) {
                                                             autoComplete="off"
                                                             value={point}
                                                             onChange={(e) => {
+                                                                setpointError(false)
                                                                 setpoint(e.target.value);
                                                             }}
                                                         />
+                                                        {pointError && (
+                                                            <span className="text-danger">Enter the Point</span>
+                                                        )}
                                                     </div>
                                                     <div className="text_filed_heading">
                                                         Is Valid
