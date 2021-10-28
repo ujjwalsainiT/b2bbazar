@@ -147,6 +147,34 @@ function SubscriptionPoint(props) {
     }
 
 
+    //to delete the subscription
+
+    const DeleteSubcriptionPoint = (data) => {
+        //subscription id
+        let id = data._id
+        try {
+            setisloading(true)
+            let url = getBaseUrl() + `deleteSubscriptionPoint/${id}`;
+            axios
+                .get(url)
+                .then(
+                    (res) => {
+                        setisUpdated(!isUpdated)
+                        setisloading(false)
+                        showNotificationMsz(res.data.msg, "success")
+                    },
+                    (error) => {
+                        setisloading(false)
+                        showNotificationMsz(error, "danger")
+                    }
+                )
+        } catch (error) {
+            setisloading(false)
+            showNotificationMsz(error, "danger")
+        }
+    }
+
+
     return (
         <>
             <div className="content_padding">
@@ -280,10 +308,7 @@ function SubscriptionPoint(props) {
                                                         <span className="action_icon ml-2">
                                                             <i
                                                                 className="fa fa-trash "
-                                                                onClick={() => {
-                                                                    SubscriptionDataArr.splice(index, 1);
-                                                                    setSubscriptionDataArr([...SubscriptionDataArr]);
-                                                                }}
+                                                                onClick={() => DeleteSubcriptionPoint(item)}
                                                             ></i>
                                                         </span>
 

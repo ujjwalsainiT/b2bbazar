@@ -153,6 +153,34 @@ function SubscriptionMonth(props) {
     }
 
 
+    //to delete the subscription
+
+    const DeleteSubcriptionMonth = (data) => {
+        //subscription id
+        let id = data._id
+        try {
+            setisloading(true)
+            let url = getBaseUrl() + `deleteSubscriptionMonth/${id}`;
+            axios
+                .get(url)
+                .then(
+                    (res) => {
+                        setisUpdated(!isUpdated)
+                        setisloading(false)
+                        showNotificationMsz(res.data.msg, "success")
+                    },
+                    (error) => {
+                        setisloading(false)
+                        showNotificationMsz(error, "danger")
+                    }
+                )
+        } catch (error) {
+            setisloading(false)
+            showNotificationMsz(error, "danger")
+        }
+    }
+
+
     return (
         <>
             <div className="content_padding">
@@ -222,7 +250,7 @@ function SubscriptionMonth(props) {
                                                                 }
                                                             }}
                                                         />
-                                                         {priceError && (
+                                                        {priceError && (
                                                             <span className="text-danger">Enter the Price</span>
                                                         )}
                                                     </div>
@@ -292,10 +320,7 @@ function SubscriptionMonth(props) {
                                                             <span className="action_icon ml-2">
                                                                 <i
                                                                     className="fa fa-trash "
-                                                                    onClick={() => {
-                                                                        SubscriptionDataArr.splice(index, 1);
-                                                                        setSubscriptionDataArr([...SubscriptionDataArr]);
-                                                                    }}
+                                                                    onClick={() => DeleteSubcriptionMonth(item)}
                                                                 ></i>
                                                             </span>
 
