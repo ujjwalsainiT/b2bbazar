@@ -14,9 +14,14 @@ import Subscription from "./Components/SuperAdmin/Subscription/Subscription";
 import SubscriptionMonth from "./Components/SuperAdmin/Subscription/SubscriptionMonth";
 import SubscriptionPoint from "./Components/SuperAdmin/Subscription/SubscriptionPoint";
 
+//for notification
+import ReactNotification from "react-notifications-component";
+import "react-notifications-component/dist/theme.css";
+
 function App() {
   return (
     <>
+      <ReactNotification />
       <Switch>
         <Route exact path="/" component={Login} />
         <Route exact path="/subscription" component={Subscription} />

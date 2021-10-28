@@ -7,9 +7,19 @@ import HOC from "../../../Common/HOC";
 
 import "./Subscription.css";
 
+//for backend call
+import axios from "axios";
+import { getBaseUrl } from "../../../utils";
+import Loder from '../../../Loder/Loder';
+import { showNotificationMsz } from "../../../utils/Validation";
+
 function SubscriptionMonth(props) {
 
+    //subscription name
     let subscriptionName = props.location.state.item.name
+
+    //subscription id
+    let subcriptionId = props.location.state.item._id
 
     //local state
     const [addMangeopen, setaddMangeopen] = useState(false);
@@ -18,12 +28,37 @@ function SubscriptionMonth(props) {
     const [SubscriptionDataArr, setSubscriptionDataArr] = useState([]);
     const [EditDailogOpen, setEditDailogOpen] = useState(false);
     const [Editmonth, setEditmonth] = useState("");
-    const [Editprice, setEditprice] = useState("")
+    const [Editprice, setEditprice] = useState("");
+    const [isloading, setisloading] = useState(false)
+    const [isUpdated, setisUpdated] = useState(false)
 
     useEffect(() => {
         window.scrollTo(0, 0);
-    }, [])
-
+        //to get data of subscription
+        const getsubscriptiondata = () => {
+            try {
+                setisloading(true)
+                let url = getBaseUrl() + `getSubscriptionMonth/${subcriptionId}`;
+                axios
+                    .get(url)
+                    .then(
+                        (res) => {
+                            console.log("get data", res)
+                            setSubscriptionDataArr(res.data)
+                            setisloading(false)
+                        },
+                        (error) => {
+                            setisloading(false)
+                            console.log("Error", error)
+                        }
+                    )
+            } catch (error) {
+                setisloading(false)
+                console.log("Error", error)
+            }
+        }
+        getsubscriptiondata();
+    }, [isUpdated, subcriptionId])
 
     const OpenEditDailog = (data) => {
         setEditmonth(data.month);
@@ -257,7 +292,11 @@ function SubscriptionMonth(props) {
                     </Button>
                 </DialogActions>
             </Dialog>
+
+            <Loder loading={isloading} />
         </>
+
+
     )
 }
 

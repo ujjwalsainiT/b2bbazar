@@ -7,9 +7,19 @@ import HOC from "../../../Common/HOC";
 
 import "./Subscription.css";
 
+//for backend call
+import axios from "axios";
+import { getBaseUrl } from "../../../utils";
+import Loder from '../../../Loder/Loder';
+import { showNotificationMsz } from "../../../utils/Validation";
+
 function SubscriptionPoint(props) {
-    
+
+    //subscription name
     let subscriptionName = props.location.state.item.name
+
+    //subscription id
+    let subcriptionId = props.location.state.item._id
 
     //local state
     const [addMangeopen, setaddMangeopen] = useState(false);
@@ -19,16 +29,117 @@ function SubscriptionPoint(props) {
     const [EditDailogOpen, setEditDailogOpen] = useState(false);
     const [Editpoint, setEditpoint] = useState("");
     const [Editisvalid, setEditisvalid] = useState(false);
+    const [EditSubscriptionPointId, setEditSubscriptionPointId] = useState("")
+    const [isloading, setisloading] = useState(false)
+    const [isUpdated, setisUpdated] = useState(false)
 
     useEffect(() => {
         window.scrollTo(0, 0);
-    }, [])
-
+        //to get data of subscription
+        const getsubscriptiondata = () => {
+            try {
+                setisloading(true)
+                let url = getBaseUrl() + `getSubscriptionPoints/${subcriptionId}`;
+                axios
+                    .get(url)
+                    .then(
+                        (res) => {
+                            console.log("get data", res)
+                            setSubscriptionDataArr(res.data)
+                            setisloading(false)
+                        },
+                        (error) => {
+                            setisloading(false)
+                            console.log("Error", error)
+                        }
+                    )
+            } catch (error) {
+                setisloading(false)
+                console.log("Error", error)
+            }
+        }
+        getsubscriptiondata();
+    }, [isUpdated, subcriptionId])
 
     const OpenEditDailog = (data) => {
-        setEditpoint(data.point);
-        setEditisvalid(data.valid)
+        setEditpoint(data.subcriptionPoints);
+        setEditisvalid(data.isValid)
+        setEditSubscriptionPointId(data._id)
         setEditDailogOpen(!EditDailogOpen)
+    }
+
+    //to add new subscription point
+    const AddSubscriptionPointData = () => {
+        try {
+            setisloading(true)
+            let url = getBaseUrl() + `addSubscriptionPoints/${subcriptionId}`;
+            let temp = {
+                subcriptionId,
+                subcriptionPoints: point,
+                isValid: isvalid
+            }
+            axios
+                .post(url, temp)
+                .then(
+                    (res) => {
+                        console.log("response daata:::", res)
+                        setaddMangeopen(!addMangeopen)
+                        setisUpdated(!isUpdated)
+                        setisloading(false)
+                        setpoint("");
+                        setisvalid(false);
+                        setaddMangeopen(!addMangeopen)
+                        showNotificationMsz(res.data.msg, "success")
+                    },
+                    (error) => {
+                        setisloading(false)
+                        showNotificationMsz(error, "danger")
+                        console.log("Error", error)
+                    }
+                )
+        } catch (error) {
+            setisloading(false)
+            showNotificationMsz(error, "danger")
+            console.log("Error", error)
+        }
+    };
+
+    //To Update the data of subscripion
+
+    const updateSubscriptionpointdata = (ID) => {
+        //subscription id
+        let id = ID
+        try {
+            setisloading(true)
+            let url = getBaseUrl() + `updateSubscriptionPoints/${id}`;
+            let temp = {
+                subcriptionPoints: Editpoint,
+                isValid: Editisvalid
+            }
+            axios
+                .post(url, temp)
+                .then(
+                    (res) => {
+                        console.log("response daata:::", res)
+                        //alert(res.data.msg)
+                        setEditDailogOpen(!EditDailogOpen)
+                        setisUpdated(!isUpdated)
+                        setisloading(false)
+                        setEditpoint("");
+                        setEditisvalid(false);
+                        showNotificationMsz(res.data.msg, "success")
+                    },
+                    (error) => {
+                        console.log("Error", error)
+                        showNotificationMsz(error, "danger")
+                        setisloading(false)
+                    }
+                )
+        } catch (error) {
+            console.log("Error", error)
+            showNotificationMsz(error, "danger")
+            setisloading(false)
+        }
     }
     return (
         <>
@@ -96,21 +207,7 @@ function SubscriptionPoint(props) {
                                                     <Button
                                                         variant="contained"
                                                         className="button_formatting"
-                                                        onClick={() => {
-                                                            if (point === "") {
-                                                                alert("Enter the Subscription point");
-                                                                return;
-                                                            }
-
-                                                            SubscriptionDataArr.push({
-                                                                point: point,
-                                                                valid: isvalid,
-                                                            });
-                                                            setSubscriptionDataArr([...SubscriptionDataArr]);
-                                                            setpoint("");
-                                                            setisvalid(false);
-                                                            setaddMangeopen(!addMangeopen)
-                                                        }}
+                                                        onClick={AddSubscriptionPointData}
                                                     >
                                                         Create
                                                     </Button>
@@ -150,12 +247,12 @@ function SubscriptionPoint(props) {
 
                                                     <div className=" p-2">
                                                         <span>
-                                                            {item.valid ?
+                                                            {item.isValid ?
                                                                 <i class="fa fa-check text-success"></i>
                                                                 : <i class="fa fa-times text-danger"></i>
                                                             }
                                                         </span>
-                                                        <span className="ml-3"> {item.point}</span>
+                                                        <span className="ml-3"> {item.subcriptionPoints}</span>
 
                                                     </div>
 
@@ -218,7 +315,7 @@ function SubscriptionPoint(props) {
                         <input
                             type="text"
                             className="form-control "
-                            placeholder="Enter he Subscrripttion point"
+                            placeholder="Enter he Subscrription point"
                             autoComplete="off"
                             value={Editpoint}
                             onChange={(e) => {
@@ -255,11 +352,14 @@ function SubscriptionPoint(props) {
                     </Button>
                     <Button
                         className="button_formatting"
+                        onClick={() => updateSubscriptionpointdata(EditSubscriptionPointId)}
                     >
                         Save{" "}
                     </Button>
                 </DialogActions>
             </Dialog>
+
+            <Loder loading={isloading} />
         </>
     )
 }

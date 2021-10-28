@@ -75,7 +75,7 @@ function Subscription(props) {
     }
 
 
-    //to addd new subscription
+    //to add new subscription
     const AddSubscriptionData = () => {
         try {
             if (!blankValidator(name)) {
