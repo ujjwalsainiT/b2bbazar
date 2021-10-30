@@ -226,21 +226,7 @@ function Category(props) {
 
                     <div className="card_admissiondetails_height mt-4">
                         <div className="textfiled_margin cardheight_overflow">
-                            {/* <div className="d-flex justify-content-between">
-                                <div className=" mt-1 mb-1">
-                                    <strong> Subsciption Name</strong>
-                                </div>
-
-                                <div className=" mt-1 mb-1">
-                                    <strong> Month</strong>
-                                </div>
-
-                                {" "}
-                                <div className="p-2">
-                                    <strong> Action</strong>
-                                </div>
-
-                            </div> */}
+                           
                             <hr />
                             {CategoryDataArr.length > 0 ?
                                 (CategoryDataArr.map((item, index) => (
@@ -252,8 +238,6 @@ function Category(props) {
                                                     <div className=" p-2">
                                                         {item.name}
                                                     </div>
-
-
 
                                                     {" "}
                                                     <div className="d-flex p-2">
