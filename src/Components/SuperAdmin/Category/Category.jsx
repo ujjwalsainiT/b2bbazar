@@ -7,6 +7,12 @@ import HOC from "../../../Common/HOC";
 
 import "./Category.css";
 
+//for backend call
+import axios from "axios";
+import { getBaseUrl } from "../../../utils";
+import Loder from '../../../Loder/Loder';
+import { blankValidator, showNotificationMsz } from "../../../utils/Validation";
+
 function Category(props) {
 
     //local state
@@ -15,18 +21,115 @@ function Category(props) {
     const [CategoryDataArr, setCategoryDataArr] = useState([]);
     const [EditDailogOpen, setEditDailogOpen] = useState(false);
     const [Editcategory, setEditcategory] = useState("");
+    const [EditCategoryId, setEditCategoryId] = useState("")
+    const [isloading, setisloading] = useState(false);
+    const [isUpdated, setisUpdated] = useState(false)
+
+    //error
+    const [categoryError, setcategoryError] = useState(false)
 
 
     useEffect(() => {
         window.scrollTo(0, 0);
-    }, [])
+        //to get data of category
+        const getCategoryData = () => {
+            try {
+                setisloading(true)
+                let url = getBaseUrl() + "getCategoryDetail";
+                axios
+                    .get(url)
+                    .then(
+                        (res) => {
+                            setisloading(false)
+                            setCategoryDataArr(res.data)
+                        },
+                        (error) => {
+                            setisloading(false)
+                            showNotificationMsz(error, "danger")
+                        }
+                    )
+            } catch (error) {
+                setisloading(false)
+                showNotificationMsz(error, "danger")
+            }
+        }
+        getCategoryData();
+    }, [isUpdated])
 
 
     const OpenEditDailog = (data) => {
-        setEditcategory(data.category);
-
+        setEditcategory(data.name);
+        setEditCategoryId(data._id);
         setEditDailogOpen(!EditDailogOpen)
     }
+
+    //to add new Category
+    const AddCategoryData = () => {
+        try {
+            if (!blankValidator(category)) {
+                setcategoryError(true)
+                return;
+            }
+            setisloading(true)
+
+            let url = getBaseUrl() + "addCategory";
+            let temp = {
+                name: category
+            }
+            axios
+                .post(url, temp)
+                .then(
+                    (res) => {
+                        showNotificationMsz(res.data.msg, "success")
+                        setaddMangeopen(!addMangeopen)
+                        setisUpdated(!isUpdated)
+                        setisloading(false)
+                        setcategory("");
+                    },
+                    (error) => {
+                        setisloading(false)
+                        showNotificationMsz(error, "danger")
+                    }
+                )
+        } catch (error) {
+            setisloading(false)
+            showNotificationMsz(error, "danger")
+        }
+    };
+
+
+    //To Update the data of Category
+
+    const updateCategorydata = (ID) => {
+        //Category id
+        let id = ID
+        try {
+            setisloading(true)
+            let url = getBaseUrl() + `UpdateCategory/${id}`;
+            let temp = {
+                name: Editcategory
+            }
+            axios
+                .post(url, temp)
+                .then(
+                    (res) => {
+                        showNotificationMsz(res.data.msg, "success")
+                        setEditDailogOpen(!EditDailogOpen)
+                        setisUpdated(!isUpdated)
+                        setisloading(false)
+                        setEditcategory("");
+                    },
+                    (error) => {
+                        showNotificationMsz(error, "danger")
+                        setisloading(false)
+                    }
+                )
+        } catch (error) {
+            showNotificationMsz(error, "danger")
+            setisloading(false)
+        }
+    }
+
     return (
         <>
             <div className="content_padding">
@@ -66,32 +169,21 @@ function Category(props) {
                                                             autoComplete="off"
                                                             value={category}
                                                             onChange={(e) => {
+                                                                setcategoryError(false)
                                                                 setcategory(e.target.value);
                                                             }}
                                                         />
+                                                        {categoryError && (
+                                                            <span className="text-danger">Enter the Category</span>
+                                                        )}
                                                     </div>
-
-
 
                                                 </div>
                                                 <div className="mt-2 pb-2 ">
                                                     <Button
                                                         variant="contained"
                                                         className="button_formatting"
-                                                        onClick={() => {
-                                                            if (category === "") {
-                                                                alert("Enter the category");
-                                                                return;
-                                                            }
-
-                                                            CategoryDataArr.push({
-                                                                category: category,
-                                                                show: true,
-                                                            });
-                                                            setCategoryDataArr([...CategoryDataArr]);
-                                                            setcategory("");
-                                                            setaddMangeopen(!addMangeopen)
-                                                        }}
+                                                        onClick={AddCategoryData}
                                                     >
                                                         Create
                                                     </Button>
@@ -130,7 +222,7 @@ function Category(props) {
                                                 <div className="d-flex justify-content-between">
 
                                                     <div className=" p-2">
-                                                        {item.category}
+                                                        {item.name}
                                                     </div>
 
 
@@ -213,11 +305,14 @@ function Category(props) {
                     </Button>
                     <Button
                         className="button_formatting"
+                        onClick={() => updateCategorydata(EditCategoryId)}
                     >
                         Save{" "}
                     </Button>
                 </DialogActions>
             </Dialog>
+
+            <Loder loading={isloading} />
         </>
     )
 }
