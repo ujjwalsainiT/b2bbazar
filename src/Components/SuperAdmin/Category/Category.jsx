@@ -270,7 +270,7 @@ function Category(props) {
                                                                 onClick={() => DeleteCategory(item)}
                                                             ></i>
                                                         </span>
-                                                        <span className="action_icon ml-2" onClick={() => props.history.push("/sub-category")}>
+                                                        <span className="action_icon ml-2" onClick={() => props.history.push("/sub-category", { item })}>
                                                             Manage subcategory
                                                         </span>
                                                     </div>
