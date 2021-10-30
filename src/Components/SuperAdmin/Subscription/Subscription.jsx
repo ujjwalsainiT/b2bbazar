@@ -11,7 +11,7 @@ import "./Subscription.css";
 import axios from "axios";
 import { getBaseUrl } from "../../../utils";
 import Loder from '../../../Loder/Loder';
-import { blankValidator } from "../../../utils/Validation";
+import { blankValidator, showNotificationMsz } from "../../../utils/Validation";
 
 function Subscription(props) {
 
@@ -55,11 +55,13 @@ function Subscription(props) {
                         (error) => {
                             setisloading(false)
                             console.log("Error", error)
+                            showNotificationMsz(error, "danger")
                         }
                     )
             } catch (error) {
                 setisloading(false)
                 console.log("Error", error)
+                showNotificationMsz(error, "danger")
             }
         }
         getsubscriptiondata();
@@ -102,7 +104,8 @@ function Subscription(props) {
                 .post(url, fd)
                 .then(
                     (res) => {
-                        console.log("response daata:::", res)
+                        
+                        showNotificationMsz(res.data.msg, "success")
                         setaddMangeopen(!addMangeopen)
                         setisUpdated(!isUpdated)
                         setisloading(false)
@@ -112,12 +115,12 @@ function Subscription(props) {
                     },
                     (error) => {
                         setisloading(false)
-                        console.log("Error", error)
+                        showNotificationMsz(error, "danger")
                     }
                 )
         } catch (error) {
             setisloading(false)
-            console.log("Error", error)
+            showNotificationMsz(error, "danger")
         }
     };
 
@@ -133,18 +136,18 @@ function Subscription(props) {
                 .get(url)
                 .then(
                     (res) => {
-                        console.log("get data", res)
+                        showNotificationMsz(res.data.msg, "success")
                         setisUpdated(!isUpdated)
                         setisloading(false)
                     },
                     (error) => {
                         setisloading(false)
-                        console.log("Error", error)
+                        showNotificationMsz(error, "danger")
                     }
                 )
         } catch (error) {
             setisloading(false)
-            console.log("Error", error)
+            showNotificationMsz(error, "danger")
         }
     }
 
@@ -165,7 +168,8 @@ function Subscription(props) {
                 .post(url, fd)
                 .then(
                     (res) => {
-                        console.log("response daata:::", res)
+                       
+                        showNotificationMsz(res.data.msg, "success")
                         setEditDailogOpen(!EditDailogOpen)
                         setisUpdated(!isUpdated)
                         setisloading(false)
@@ -174,12 +178,12 @@ function Subscription(props) {
                         setEditprofile("")
                     },
                     (error) => {
-                        console.log("Error", error)
+                        showNotificationMsz(error, "danger")                  
                         setisloading(false)
                     }
                 )
         } catch (error) {
-            console.log("Error", error)
+            showNotificationMsz(error, "danger")      
             setisloading(false)
         }
     }
