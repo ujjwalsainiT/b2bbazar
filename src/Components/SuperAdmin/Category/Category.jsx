@@ -130,6 +130,34 @@ function Category(props) {
         }
     }
 
+
+    //to delete the category
+
+    const DeleteCategory = (data) => {
+        //category id
+        let id = data._id
+        try {
+            setisloading(true)
+            let url = getBaseUrl() + `deleteCategory/${id}`;
+            axios
+                .get(url)
+                .then(
+                    (res) => {
+                        showNotificationMsz(res.data.msg, "success")
+                        setisUpdated(!isUpdated)
+                        setisloading(false)
+                    },
+                    (error) => {
+                        setisloading(false)
+                        showNotificationMsz(error, "danger")
+                    }
+                )
+        } catch (error) {
+            setisloading(false)
+            showNotificationMsz(error, "danger")
+        }
+    }
+
     return (
         <>
             <div className="content_padding">
@@ -239,10 +267,7 @@ function Category(props) {
                                                         <span className="action_icon ml-2">
                                                             <i
                                                                 className="fa fa-trash "
-                                                                onClick={() => {
-                                                                    CategoryDataArr.splice(index, 1);
-                                                                    setCategoryDataArr([...CategoryDataArr]);
-                                                                }}
+                                                                onClick={() => DeleteCategory(item)}
                                                             ></i>
                                                         </span>
                                                         <span className="action_icon ml-2" onClick={() => props.history.push("/sub-category")}>
