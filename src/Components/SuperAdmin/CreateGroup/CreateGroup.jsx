@@ -12,7 +12,7 @@ import "./CreateGroup.css";
 import axios from "axios";
 import { getBaseUrl } from "../../../utils";
 import Loder from '../../../Loder/Loder';
-import { blankValidator, showNotificationMsz } from "../../../utils/Validation";
+import { showNotificationMsz } from "../../../utils/Validation";
 
 
 function CreateGroup(props) {
@@ -84,6 +84,30 @@ function CreateGroup(props) {
             }
         }
         getSubCategoryData();
+
+        //to get data of Group
+        const getGroupDetailData = () => {
+            try {
+                setisloading(true)
+                let url = getBaseUrl() + "getGroupDetail";
+                axios
+                    .get(url)
+                    .then(
+                        (res) => {
+                            setisloading(false)
+                            console.log("res data:::", res)
+                        },
+                        (error) => {
+                            setisloading(false)
+                            showNotificationMsz(error, "danger")
+                        }
+                    )
+            } catch (error) {
+                setisloading(false)
+                showNotificationMsz(error, "danger")
+            }
+        }
+        getGroupDetailData();
     }, [])
 
 
@@ -93,8 +117,6 @@ function CreateGroup(props) {
         setEditsubcatgory(data.subcatgory);
         setEditDailogOpen(!EditDailogOpen)
     }
-
-    const [personName, setPersonName] = React.useState([]);
 
     const handleCategoryData = (event) => {
         const {
