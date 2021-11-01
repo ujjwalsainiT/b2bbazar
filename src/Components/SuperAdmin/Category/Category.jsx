@@ -26,7 +26,8 @@ function Category(props) {
     const [isUpdated, setisUpdated] = useState(false)
 
     //error
-    const [categoryError, setcategoryError] = useState(false)
+    const [categoryError, setcategoryError] = useState(false);
+    const [EditcategoryError, setEditcategoryError] = useState(false)
 
 
     useEffect(() => {
@@ -104,6 +105,10 @@ function Category(props) {
         //Category id
         let id = ID
         try {
+            if (!blankValidator(Editcategory)) {
+                setEditcategoryError(false)
+                return
+            }
             setisloading(true)
             let url = getBaseUrl() + `UpdateCategory/${id}`;
             let temp = {
@@ -226,7 +231,7 @@ function Category(props) {
 
                     <div className="card_admissiondetails_height mt-4">
                         <div className="textfiled_margin cardheight_overflow">
-                           
+
                             <hr />
                             {CategoryDataArr.length > 0 ?
                                 (CategoryDataArr.map((item, index) => (
@@ -299,9 +304,13 @@ function Category(props) {
                             autoComplete="off"
                             value={Editcategory}
                             onChange={(e) => {
+                                setEditcategoryError(false)
                                 setEditcategory(e.target.value);
                             }}
                         />
+                        {EditcategoryError && (
+                            <span className="text-danger">Enter the Category</span>
+                        )}
                     </div>
 
                 </DialogContent>

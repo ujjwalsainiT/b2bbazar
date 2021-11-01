@@ -14,7 +14,6 @@ import Loder from '../../../Loder/Loder';
 import { blankValidator, showNotificationMsz } from "../../../utils/Validation";
 
 function SubCategory(props) {
-    console.log("categgorprops:::", props)
 
     //category id
     let category_Id = props.location.state.item._id
@@ -26,10 +25,12 @@ function SubCategory(props) {
     const [EditDailogOpen, setEditDailogOpen] = useState(false);
     const [Editcategory, setEditcategory] = useState("");
     const [isloading, setisloading] = useState(false);
-    const [isUpdated, setisUpdated] = useState(false)
+    const [isUpdated, setisUpdated] = useState(false);
+    const [EditsubCategoryId, setEditsubCategoryId] = useState("")
 
     //error
     const [categoryError, setcategoryError] = useState(false)
+    const [EditcategoryError, setEditcategoryError] = useState(false)
 
 
     useEffect(() => {
@@ -60,7 +61,8 @@ function SubCategory(props) {
     }, [isUpdated, category_Id])
 
     const OpenEditDailog = (data) => {
-        setEditcategory(data.category);
+        setEditcategory(data.name);
+        setEditsubCategoryId(data._id)
         setEditDailogOpen(!EditDailogOpen)
     }
 
@@ -98,6 +100,72 @@ function SubCategory(props) {
             showNotificationMsz(error, "danger")
         }
     };
+
+    //To Update the data of subcategory
+
+    const updatesubcategorydata = (ID) => {
+        //subcategory id
+        let id = ID
+        try {
+            if (!blankValidator(Editcategory)) {
+                setEditcategoryError(true);
+                return
+            }
+            setisloading(true)
+            let url = getBaseUrl() + `UpdateSubCategory/${id}`;
+            let temp = {
+                name: Editcategory
+            }
+            axios
+                .post(url, temp)
+                .then(
+                    (res) => {
+                        showNotificationMsz(res.data.msg, "success")
+                        setEditDailogOpen(!EditDailogOpen)
+                        setisUpdated(!isUpdated)
+                        setisloading(false)
+                        setEditcategory("");
+                    },
+                    (error) => {
+                        showNotificationMsz(error, "danger")
+                        setisloading(false)
+                    }
+                )
+        } catch (error) {
+            showNotificationMsz(error, "danger")
+            setisloading(false)
+        }
+    }
+
+
+    //to delete the subcategory
+
+    const DeleteSubCategory = (data) => {
+        //subcategory id
+        let id = data._id
+        try {
+            setisloading(true)
+            let url = getBaseUrl() + `deleteSubCategory/${id}`;
+            axios
+                .get(url)
+                .then(
+                    (res) => {
+                        showNotificationMsz(res.data.msg, "success")
+                        setisUpdated(!isUpdated)
+                        setisloading(false)
+                    },
+                    (error) => {
+                        setisloading(false)
+                        showNotificationMsz(error, "danger")
+                    }
+                )
+        } catch (error) {
+            setisloading(false)
+            showNotificationMsz(error, "danger")
+        }
+    }
+
+
     return (
         <>
             <div className="content_padding">
@@ -137,6 +205,7 @@ function SubCategory(props) {
                                                             autoComplete="off"
                                                             value={category}
                                                             onChange={(e) => {
+                                                                setcategoryError(false)
                                                                 setcategory(e.target.value);
                                                             }}
                                                         />
@@ -179,8 +248,6 @@ function SubCategory(props) {
                                                         {item.name}
                                                     </div>
 
-
-
                                                     {" "}
                                                     <div className="d-flex p-2">
 
@@ -193,10 +260,7 @@ function SubCategory(props) {
                                                         <span className="action_icon ml-2">
                                                             <i
                                                                 className="fa fa-trash "
-                                                                onClick={() => {
-                                                                    CategoryDataArr.splice(index, 1);
-                                                                    setCategoryDataArr([...CategoryDataArr]);
-                                                                }}
+                                                                onClick={() => DeleteSubCategory(item)}
                                                             ></i>
                                                         </span>
 
@@ -242,9 +306,13 @@ function SubCategory(props) {
                             autoComplete="off"
                             value={Editcategory}
                             onChange={(e) => {
+                                setEditcategoryError(false)
                                 setEditcategory(e.target.value);
                             }}
                         />
+                        {EditcategoryError && (
+                            <span className="text-danger">Enter the Sub-Category</span>
+                        )}
                     </div>
 
                 </DialogContent>
@@ -257,6 +325,7 @@ function SubCategory(props) {
                     </Button>
                     <Button
                         className="button_formatting"
+                        onClick={() => updatesubcategorydata(EditsubCategoryId)}
                     >
                         Save{" "}
                     </Button>
