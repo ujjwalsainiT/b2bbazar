@@ -17,6 +17,7 @@ import SubscriptionPoint from "./Components/SuperAdmin/Subscription/Subscription
 //for notification
 import ReactNotification from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
+import NewsType from "./Components/SuperAdmin/NewsType/NewsType";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
         <Route exact path="/create-group" component={CreateGroup} />
         <Route exact path="/add-employee" component={AddEmployee} />
         <Route exact path="/employee-list" component={EmployeeList} />
+        <Route exact path="/news-type" component={NewsType} />
       </Switch>
     </>
   );
