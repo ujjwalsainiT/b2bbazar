@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { Grid, Card, Button, Dialog, DialogActions, DialogTitle, DialogContent } from '@material-ui/core';
+import { Grid, Card, Button, Dialog, DialogActions, DialogTitle, DialogContent, Select, OutlinedInput, MenuItem, useTheme, FormControl } from '@material-ui/core';
+
 import Expand from "react-expand-animated";
 
 //common header
@@ -7,6 +8,25 @@ import HOC from "../../../Common/HOC";
 
 import "./CreateGroup.css";
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    },
+};
+
+function getStyles(name, personName, theme) {
+    return {
+        fontWeight:
+            personName.indexOf(name) === -1
+                ? theme.typography.fontWeightRegular
+                : theme.typography.fontWeightMedium,
+    };
+}
 
 function CreateGroup(props) {
 
@@ -21,6 +41,20 @@ function CreateGroup(props) {
     const [Editcatgory, setEditcatgory] = useState("");
     const [Editsubcatgory, setEditsubcatgory] = useState("")
 
+    const theme = useTheme();
+    const names = [
+        'Oliver Hansen',
+        'Van Henry',
+        'April Tucker',
+        'Ralph Hubbard',
+        'Omar Alexander',
+        'Carlos Abbott',
+        'Miriam Wagner',
+        'Bradley Wilkerson',
+        'Virginia Andrews',
+        'Kelly Snyder',
+    ];
+
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [])
@@ -32,6 +66,19 @@ function CreateGroup(props) {
         setEditsubcatgory(data.subcatgory);
         setEditDailogOpen(!EditDailogOpen)
     }
+
+    const [personName, setPersonName] = React.useState([]);
+
+    const handleChange = (event) => {
+        const {
+            target: { value },
+        } = event;
+        setPersonName(
+            // On autofill we get a the stringified value.
+            typeof value === 'string' ? value.split(',') : value,
+        );
+    };
+
     return (
         <>
             <div className="content_padding">
@@ -41,12 +88,9 @@ function CreateGroup(props) {
                     <div className="card_admissiondetails_height">
                         <div className="textfiled_margin">
                             {!addMangeopen ? (
-                                <div className="d-flex">
-                                    <span className="icon_color">
-                                        <i className="fa fa-plus-circle"></i>
-                                    </span>
-                                    <span className="mt-1 ml-2 addmanageuserfont hover_cursor" onClick={() => setaddMangeopen(!addMangeopen)}>
-                                        <strong> Add New group</strong>
+                                <div>
+                                    <span className="addmanageuserfont hover_cursor" onClick={() => setaddMangeopen(!addMangeopen)}>
+                                        <i className="fa fa-plus-circle icon_color mr-1"></i> <strong> Add New group</strong>
                                     </span>
                                 </div>
                             ) : (
@@ -93,19 +137,26 @@ function CreateGroup(props) {
                                                                 Category
                                                             </div>
                                                             <div className="input_Margin_right mt-1">
-                                                                <select
-                                                                    class="form-control"
-                                                                    value={catgory}
-                                                                    onChange={(e) => {
-                                                                        setcatgory(e.target.value);
-                                                                    }}
-                                                                >
-                                                                    <option value="">select Cateory</option>
-                                                                    <option value="Cateory 1">Cateory 1</option>
-                                                                    <option value="Cateory 2">Cateory 2</option>
-                                                                    <option value="Cateory 3">Cateory 3</option>
-                                                                    <option value="Cateory 4">Cateory 4</option>
-                                                                </select>
+                                                                <FormControl sx={{ m: 1, width: 300 }}>
+                                                                    <Select
+
+                                                                        multiple
+                                                                        value={personName}
+                                                                        onChange={handleChange}
+                                                                        input={<OutlinedInput label="Name" />}
+                                                                        MenuProps={MenuProps}
+                                                                    >
+                                                                        {names.map((name) => (
+                                                                            <MenuItem
+                                                                                key={name}
+                                                                                value={name}
+                                                                                style={getStyles(name, personName, theme)}
+                                                                            >
+                                                                                {name}
+                                                                            </MenuItem>
+                                                                        ))}
+                                                                    </Select>
+                                                                </FormControl>
                                                             </div>
                                                         </Grid>
 
@@ -173,7 +224,7 @@ function CreateGroup(props) {
 
                     <div className="card_admissiondetails_height mt-4">
                         <div className="textfiled_margin cardheight_overflow">
-                            
+
                             <hr />
                             {SubscriptionDataArr.length > 0 ?
                                 (SubscriptionDataArr.map((item, index) => (
