@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Grid, Card, Button, Dialog, DialogActions, DialogTitle, DialogContent, Select, OutlinedInput, MenuItem, useTheme, FormControl } from '@material-ui/core';
+import { Grid, Card, Button, Dialog, DialogActions, DialogTitle, DialogContent, Select, MenuItem, useTheme, FormControl } from '@material-ui/core';
 
 import Expand from "react-expand-animated";
 
@@ -8,55 +8,82 @@ import HOC from "../../../Common/HOC";
 
 import "./CreateGroup.css";
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
-        },
-    },
-};
+//for backend call
+import axios from "axios";
+import { getBaseUrl } from "../../../utils";
+import Loder from '../../../Loder/Loder';
+import { blankValidator, showNotificationMsz } from "../../../utils/Validation";
 
-function getStyles(name, personName, theme) {
-    return {
-        fontWeight:
-            personName.indexOf(name) === -1
-                ? theme.typography.fontWeightRegular
-                : theme.typography.fontWeightMedium,
-    };
-}
 
 function CreateGroup(props) {
 
     //local state
     const [addMangeopen, setaddMangeopen] = useState(false);
     const [name, setname] = useState("");
-    const [catgory, setcatgory] = useState("");
-    const [subcatgory, setsubcatgory] = useState("");
+    const [catgoryArr, setcatgoryArr] = useState([]);
+    const [subcatgoryArr, setsubcatgoryArr] = useState([]);
+    const [CategorydataArr, setCategorydataArr] = useState([])
+    const [SubCategorydataArr, setSubCategorydataArr] = useState([])
     const [SubscriptionDataArr, setSubscriptionDataArr] = useState([]);
     const [EditDailogOpen, setEditDailogOpen] = useState(false);
     const [Editname, setEditname] = useState("")
     const [Editcatgory, setEditcatgory] = useState("");
     const [Editsubcatgory, setEditsubcatgory] = useState("")
+    const [isloading, setisloading] = useState(false);
 
     const theme = useTheme();
-    const names = [
-        'Oliver Hansen',
-        'Van Henry',
-        'April Tucker',
-        'Ralph Hubbard',
-        'Omar Alexander',
-        'Carlos Abbott',
-        'Miriam Wagner',
-        'Bradley Wilkerson',
-        'Virginia Andrews',
-        'Kelly Snyder',
-    ];
+
 
     useEffect(() => {
         window.scrollTo(0, 0);
+
+        //to get data of category
+        const getCategoryData = () => {
+            try {
+                setisloading(true)
+                let url = getBaseUrl() + "getCategoryDetail";
+                axios
+                    .get(url)
+                    .then(
+                        (res) => {
+                            setisloading(false)
+                            setcatgoryArr(res.data)
+                        },
+                        (error) => {
+                            setisloading(false)
+                            showNotificationMsz(error, "danger")
+                        }
+                    )
+            } catch (error) {
+                setisloading(false)
+                showNotificationMsz(error, "danger")
+            }
+        }
+        getCategoryData();
+
+        //to get data of category
+        const getSubCategoryData = () => {
+            try {
+                setisloading(true)
+                let url = getBaseUrl() + "getSubCategory";
+                axios
+                    .get(url)
+                    .then(
+                        (res) => {
+                            setisloading(false)
+                            setsubcatgoryArr(res.data)
+                        },
+                        (error) => {
+                            setisloading(false)
+                            showNotificationMsz(error, "danger")
+                        }
+                    )
+            } catch (error) {
+                setisloading(false)
+                showNotificationMsz(error, "danger")
+            }
+        }
+        getSubCategoryData();
     }, [])
 
 
@@ -69,14 +96,26 @@ function CreateGroup(props) {
 
     const [personName, setPersonName] = React.useState([]);
 
-    const handleChange = (event) => {
+    const handleCategoryData = (event) => {
         const {
             target: { value },
         } = event;
-        setPersonName(
+        setCategorydataArr(
             // On autofill we get a the stringified value.
             typeof value === 'string' ? value.split(',') : value,
         );
+        console.log("category:::", CategorydataArr)
+    };
+
+    const handleSubCategoryData = (event) => {
+        const {
+            target: { value },
+        } = event;
+        setSubCategorydataArr(
+            // On autofill we get a the stringified value.
+            typeof value === 'string' ? value.split(',') : value,
+        );
+        console.log("Subcategory:::", SubCategorydataArr)
     };
 
     return (
@@ -141,18 +180,18 @@ function CreateGroup(props) {
                                                                     <Select
                                                                         multiple
                                                                         placeholder="Select Categories"
-                                                                        value={personName}
-                                                                        onChange={handleChange}
+                                                                        value={CategorydataArr}
+                                                                        onChange={handleCategoryData}
                                                                         variant="outlined"
                                                                         MenuProps={MenuProps}
                                                                     >
-                                                                        {names.map((name) => (
+                                                                        {catgoryArr.map((item, index) => (
                                                                             <MenuItem
-                                                                                key={name}
-                                                                                value={name}
-                                                                                style={getStyles(name, personName, theme)}
+                                                                                key={index}
+                                                                                value={item._id}
+                                                                                style={getStyles(name, CategorydataArr, theme)}
                                                                             >
-                                                                                {name}
+                                                                                {item.name}
                                                                             </MenuItem>
                                                                         ))}
                                                                     </Select>
@@ -165,19 +204,26 @@ function CreateGroup(props) {
                                                                 Sub Category
                                                             </div>
                                                             <div className=" mt-1">
-                                                                <select
-                                                                    class="form-control"
-                                                                    value={subcatgory}
-                                                                    onChange={(e) => {
-                                                                        setsubcatgory(e.target.value);
-                                                                    }}
-                                                                >
-                                                                    <option value="">select sub-Cateory</option>
-                                                                    <option value="sub Cateory 1">sub Cateory 1</option>
-                                                                    <option value="sub Cateory 2">sub Cateory 2</option>
-                                                                    <option value="sub Cateory 3">sub Cateory 3</option>
-                                                                    <option value="sub Cateory 4">sub Cateory 4</option>
-                                                                </select>
+                                                                <FormControl sx={{ m: 1, width: 300 }}>
+                                                                    <Select
+                                                                        multiple
+                                                                        placeholder="Select Categories"
+                                                                        value={SubCategorydataArr}
+                                                                        onChange={handleSubCategoryData}
+                                                                        variant="outlined"
+                                                                        MenuProps={MenuProps}
+                                                                    >
+                                                                        {subcatgoryArr.map((item, index) => (
+                                                                            <MenuItem
+                                                                                key={index}
+                                                                                value={item._id}
+                                                                                style={getStyles(name, SubCategorydataArr, theme)}
+                                                                            >
+                                                                                {item.name}
+                                                                            </MenuItem>
+                                                                        ))}
+                                                                    </Select>
+                                                                </FormControl>
                                                             </div>
                                                         </Grid>
                                                     </Grid>
@@ -186,30 +232,7 @@ function CreateGroup(props) {
                                                     <Button
                                                         variant="contained"
                                                         className="button_formatting"
-                                                        onClick={() => {
-                                                            if (name === "") {
-                                                                alert("Enter the Group Name");
-                                                                return;
-                                                            }
-                                                            if (catgory === "") {
-                                                                alert("Select the Category");
-                                                                return;
-                                                            }
-                                                            if (subcatgory === "") {
-                                                                alert("Select the sub-Category");
-                                                                return;
-                                                            }
-                                                            SubscriptionDataArr.push({
-                                                                name: name,
-                                                                catgory: catgory,
-                                                                subcatgory: subcatgory,
-                                                            });
-                                                            setSubscriptionDataArr([...SubscriptionDataArr]);
-                                                            setname("");
-                                                            setcatgory("");
-                                                            setsubcatgory("");
-                                                            setaddMangeopen(!addMangeopen)
-                                                        }}
+
                                                     >
                                                         Create
                                                     </Button>
@@ -367,8 +390,29 @@ function CreateGroup(props) {
                     </Button>
                 </DialogActions>
             </Dialog>
+
+            <Loder loading={isloading} />
         </>
     )
 }
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    },
+};
+
+function getStyles(name, personName, theme) {
+    return {
+        fontWeight:
+            personName.indexOf(name) === -1
+                ? theme.typography.fontWeightRegular
+                : theme.typography.fontWeightMedium,
+    };
+}
 export default HOC(CreateGroup)
