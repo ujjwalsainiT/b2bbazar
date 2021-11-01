@@ -104,7 +104,7 @@ function Subscription(props) {
                 .post(url, fd)
                 .then(
                     (res) => {
-                        
+
                         showNotificationMsz(res.data.msg, "success")
                         setaddMangeopen(!addMangeopen)
                         setisUpdated(!isUpdated)
@@ -168,7 +168,7 @@ function Subscription(props) {
                 .post(url, fd)
                 .then(
                     (res) => {
-                       
+
                         showNotificationMsz(res.data.msg, "success")
                         setEditDailogOpen(!EditDailogOpen)
                         setisUpdated(!isUpdated)
@@ -178,12 +178,12 @@ function Subscription(props) {
                         setEditprofile("")
                     },
                     (error) => {
-                        showNotificationMsz(error, "danger")                  
+                        showNotificationMsz(error, "danger")
                         setisloading(false)
                     }
                 )
         } catch (error) {
-            showNotificationMsz(error, "danger")      
+            showNotificationMsz(error, "danger")
             setisloading(false)
         }
     }
@@ -197,12 +197,9 @@ function Subscription(props) {
                     <div className="card_admissiondetails_height">
                         <div className="textfiled_margin">
                             {!addMangeopen ? (
-                                <div className="d-flex">
-                                    <span className="icon_color">
-                                        <i className="fa fa-plus-circle"></i>
-                                    </span>
-                                    <span className="mt-1 ml-2 addmanageuserfont hover_cursor" onClick={() => setaddMangeopen(!addMangeopen)}>
-                                        <strong> Add New Subscription</strong>
+                                <div>
+                                    <span className="addmanageuserfont hover_cursor" onClick={() => setaddMangeopen(!addMangeopen)}>
+                                        <i className="fa fa-plus-circle icon_color mr-1"></i> <strong> Add New Subscription</strong>
                                     </span>
                                 </div>
                             ) : (

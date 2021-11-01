@@ -139,11 +139,11 @@ function CreateGroup(props) {
                                                             <div className="input_Margin_right mt-1">
                                                                 <FormControl sx={{ m: 1, width: 300 }}>
                                                                     <Select
-
                                                                         multiple
+                                                                        placeholder="Select Categories"
                                                                         value={personName}
                                                                         onChange={handleChange}
-                                                                        input={<OutlinedInput label="Name" />}
+                                                                        variant="outlined"
                                                                         MenuProps={MenuProps}
                                                                     >
                                                                         {names.map((name) => (

@@ -175,12 +175,9 @@ function SubCategory(props) {
                     <div className="card_admissiondetails_height">
                         <div className="textfiled_margin">
                             {!addMangeopen ? (
-                                <div className="d-flex">
-                                    <span className="icon_color">
-                                        <i className="fa fa-plus-circle"></i>
-                                    </span>
-                                    <span className="mt-1 ml-2 addmanageuserfont hover_cursor" onClick={() => setaddMangeopen(!addMangeopen)}>
-                                        <strong> Add New sub-category</strong>
+                                <div>
+                                    <span className="addmanageuserfont hover_cursor" onClick={() => setaddMangeopen(!addMangeopen)}>
+                                        <i className="fa fa-plus-circle icon_color mr-1"></i> <strong> Add New Sub-Category</strong>
                                     </span>
                                 </div>
                             ) : (
