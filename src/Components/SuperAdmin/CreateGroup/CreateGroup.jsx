@@ -24,7 +24,7 @@ function CreateGroup(props) {
     const [subcatgoryArr, setsubcatgoryArr] = useState([]);
     const [CategorydataArr, setCategorydataArr] = useState([])
     const [SubCategorydataArr, setSubCategorydataArr] = useState([])
-    const [SubscriptionDataArr, setSubscriptionDataArr] = useState([]);
+    const [GroupDataArr, setGroupDataArr] = useState([]);
     const [EditDailogOpen, setEditDailogOpen] = useState(false);
     const [Editname, setEditname] = useState("")
     const [Editcatgory, setEditcatgory] = useState("");
@@ -95,7 +95,7 @@ function CreateGroup(props) {
                     .then(
                         (res) => {
                             setisloading(false)
-                            console.log("res data:::", res)
+                            setGroupDataArr(res.data)
                         },
                         (error) => {
                             setisloading(false)
@@ -271,25 +271,37 @@ function CreateGroup(props) {
                         <div className="textfiled_margin cardheight_overflow">
 
                             <hr />
-                            {SubscriptionDataArr.length > 0 ?
-                                (SubscriptionDataArr.map((item, index) => (
+                            {GroupDataArr.length > 0 ?
+                                (GroupDataArr.map((item, index) => (
                                     <Card className="Card_shadow mb-2 mt-2">
                                         <div className="card_admissiondetails_height">
                                             <div className="textfiled_margin">
                                                 <Grid className="Component_main_grid mt-2">
-                                                    <Grid item md={3}>
+                                                    <Grid item md={1}>
+                                                        <div className=" p-2">
+                                                            <img src={`https://secure-plains-62142.herokuapp.com/public/images/${item.image}`} alt="" style={{ width: "60px", height: "40px" }} />
+                                                        </div>
+                                                    </Grid>
+                                                    <Grid item md={5}>
                                                         <div className=" p-2">
                                                             {item.name}
                                                         </div>
                                                     </Grid>
-                                                    <Grid item md={3}>
-                                                        <div className=" p-2">
-                                                            {item.catgory}
+                                                    <Grid item md={6}>
+                                                        <div className="d-flex p-2">
+                                                            {item.category_name.map((item, index) => (
+                                                                <span>{item}</span>
+                                                            ))}
                                                         </div>
                                                     </Grid>
-                                                    <Grid item md={3}>
-                                                        <div className=" p-2">
-                                                            {item.subcatgory}
+
+                                                </Grid>
+                                                <Grid className="Component_main_grid mt-2">
+                                                    <Grid item md={9}>
+                                                        <div className="d-flex p-2">
+                                                        {item.sub_category_name.map((item, index) => (
+                                                                <span>{item}</span>
+                                                            ))}
                                                         </div>
                                                     </Grid>
                                                     <Grid item md={3}>
@@ -305,8 +317,8 @@ function CreateGroup(props) {
                                                                 <i
                                                                     className="fa fa-trash "
                                                                     onClick={() => {
-                                                                        SubscriptionDataArr.splice(index, 1);
-                                                                        setSubscriptionDataArr([...SubscriptionDataArr]);
+                                                                        GroupDataArr.splice(index, 1);
+                                                                        setGroupDataArr([...GroupDataArr]);
                                                                     }}
                                                                 ></i>
                                                             </span>
