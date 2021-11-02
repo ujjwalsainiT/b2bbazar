@@ -1,52 +1,43 @@
 import React, { useState, useEffect } from 'react'
-import { Card, Button, Dialog, DialogActions, DialogTitle, DialogContent } from '@material-ui/core';
+import { Grid, Card, Button, Dialog, DialogActions, DialogTitle, DialogContent } from '@material-ui/core';
 import Expand from "react-expand-animated";
 
 //common header
 import HOC from "../../../Common/HOC";
 
 
-// //for backend call
-// import axios from "axios";
-// import { getBaseUrl } from "../../../utils";
-// import Loder from '../../../Loder/Loder';
-// import { blankValidator, showNotificationMsz } from "../../../utils/Validation";
-
-function NewsType(props) {
+function PostNews(props) {
 
     //local state
     const [addMangeopen, setaddMangeopen] = useState(false);
     const [name, setname] = useState("");
-    const [NewtypeArr, setNewtypeArr] = useState([])
-    const [NameEdit, setNameEdit] = useState([])
+    const [SubscriptionDataArr] = useState([]);
     const [EditDailogOpen, setEditDailogOpen] = useState(false);
+    const [Editname, setEditname] = useState("");
 
     useEffect(() => {
         window.scrollTo(0, 0);
-
     }, [])
 
 
-    const OpenEditDailog = () => {
-        // setNameEdit(data.name);
-        // setEditCategoryId(data._id);
+    const OpenEditDailog = (data) => {
+        setEditname(data.name);
         setEditDailogOpen(!EditDailogOpen)
     }
-
 
 
     return (
         <>
             <div className="content_padding">
 
-                <div className="mb-3 page_heading">Manage News Type</div>
+                <div className="mb-3 page_heading">Manage News Data</div>
                 <Card className="pt-3 pb-4 Card_shadow">
                     <div className="card_admissiondetails_height">
                         <div className="textfiled_margin">
                             {!addMangeopen ? (
                                 <div>
                                     <span className="addmanageuserfont hover_cursor" onClick={() => setaddMangeopen(!addMangeopen)}>
-                                        <i className="fa fa-plus-circle icon_color mr-1"></i> <strong> Add News Type</strong>
+                                        <i className="fa fa-plus-circle icon_color mr-1"></i> <strong> Add New News</strong>
                                     </span>
                                 </div>
                             ) : (
@@ -57,36 +48,42 @@ function NewsType(props) {
                                                 <div className="card_content_instition">
                                                     <div className="text-right">
                                                         <span className="icon_color hover_cursor">
-                                                            <i class="fa fa-times cursor" onClick={() => setaddMangeopen(!addMangeopen)}></i>
+                                                            <i className="fa fa-times cursor" onClick={() => setaddMangeopen(!addMangeopen)}></i>
                                                         </span>
                                                     </div>
                                                     <div className="text_filed_heading">
-                                                        Type Name
+                                                        News Title
                                                     </div>
                                                     <div className=" mt-1">
                                                         <input
                                                             type="text"
                                                             className="form-control "
-                                                            placeholder="Enter the news type"
+                                                            placeholder="News Title"
                                                             autoComplete="off"
                                                             value={name}
                                                             onChange={(e) => {
-                                                                setname(e.target.value);
+                                                                setname(e.target.value)
                                                             }}
                                                         />
+
                                                     </div>
 
+                                                    <div className="text_filed_heading">
+                                                        News Image
+                                                    </div>
+                                                    <div className=" mt-1">
+                                                        <input
+                                                            type="file"
+                                                            className="form-control "
+                                                            autoComplete="off"
+                                                        />
+
+                                                    </div>
                                                 </div>
                                                 <div className="mt-2 pb-2 ">
                                                     <Button
                                                         variant="contained"
                                                         className="button_formatting"
-                                                        onClick={() => {
-                                                            NewtypeArr.push({
-                                                                name: name
-                                                            })
-                                                            setNewtypeArr([...NewtypeArr])
-                                                        }}
 
                                                     >
                                                         Create
@@ -102,40 +99,47 @@ function NewsType(props) {
 
                     <div className="card_admissiondetails_height mt-4">
                         <div className="textfiled_margin cardheight_overflow">
-
                             <hr />
-                            {NewtypeArr.length > 0 ?
-                                (NewtypeArr.map((item, index) => (
+                            {SubscriptionDataArr.length > 0 ?
+                                (SubscriptionDataArr.map((item, index) => (
                                     <Card className="Card_shadow mb-2 mt-2">
                                         <div className="card_admissiondetails_height">
                                             <div className="textfiled_margin">
-                                                <div className="d-flex justify-content-between">
+                                                <Grid className="Component_main_grid mt-2">
+                                                    <Grid item md={1}>
 
-                                                    <div className=" p-2">
-                                                        {item.name}
-                                                    </div>
+                                                        <div className=" p-2">
 
-                                                    {" "}
-                                                    <div className="d-flex p-2">
+                                                        </div>
+                                                    </Grid>
+                                                    <Grid item md={3}>
 
-                                                        <span className="action_icon mr-2 ml-1">
-                                                            <i
-                                                                className="fa fa-pencil"
-                                                                onClick={() => OpenEditDailog}
-                                                            ></i>
-                                                        </span>
-                                                        <span className="action_icon ml-2">
-                                                            <i
-                                                                className="fa fa-trash "
+                                                        <div className=" p-2">
+                                                            {item.name}
+                                                        </div>
+                                                    </Grid>
+                                                    <Grid item md={4}>
 
-                                                            ></i>
-                                                        </span>
-                                                        <span className="action_icon ml-2" onClick={() => props.history.push("/add-new-news")}>
-                                                            Manage News
-                                                        </span>
-                                                    </div>
+                                                    </Grid>
+                                                    <Grid item md={4}>
+                                                        <div className="d-flex p-2">
 
-                                                </div>
+                                                            <span className="action_icon mr-2 ml-1">
+                                                                <i
+                                                                    className="fa fa-pencil"
+                                                                    onClick={() => OpenEditDailog(item)}
+                                                                ></i>
+                                                            </span>
+                                                            <span className="action_icon ml-2">
+                                                                <i
+                                                                    className="fa fa-trash "
+
+                                                                ></i>
+                                                            </span>
+
+                                                        </div>
+                                                    </Grid>
+                                                </Grid>
                                             </div>
                                         </div>
                                     </Card>
@@ -155,31 +159,57 @@ function NewsType(props) {
                 fullWidth="fullWidth"
             >
                 <DialogTitle>
-                    Edit Category
+                    Edit News Data
                     <span
                         className="float-right icon_color"
 
                     >
-                        <i class="fa fa-times hover_cursor" onClick={() => setEditDailogOpen(!EditDailogOpen)}></i>{" "}
+                        <i className="fa fa-times hover_cursor" onClick={() => setEditDailogOpen(!EditDailogOpen)}></i>{" "}
                     </span>
                 </DialogTitle>
                 <DialogContent>
                     <div className="text_filed_heading">
-                        Type Name
+                        News Title
                     </div>
                     <div className=" mt-1">
                         <input
                             type="text"
                             className="form-control "
-                            placeholder="Enter the News Type"
+                            placeholder="News Title"
                             autoComplete="off"
-                            value={NameEdit}
+                            value={Editname}
                             onChange={(e) => {
-                                setNameEdit(e.target.value);
+                                setEditname(e.target.value);
                             }}
                         />
                     </div>
 
+                    <div className="text_filed_heading">
+                        News Image
+                    </div>
+                    <div className=" mt-1">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="fa fa-paperclip"></i>
+                                </span>
+                            </div>
+                            <div class="custom-file">
+                                <input
+                                    type="file"
+                                    class="custom-file-input"
+
+                                />
+                                <label
+                                    class="custom-file-label"
+                                    for="inputGroupFile01"
+                                >
+
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
                 </DialogContent>
                 <DialogActions>
                     <Button
@@ -190,6 +220,7 @@ function NewsType(props) {
                     </Button>
                     <Button
                         className="button_formatting"
+
                     >
                         Save{" "}
                     </Button>
@@ -200,4 +231,4 @@ function NewsType(props) {
     )
 }
 
-export default HOC(NewsType)
+export default HOC(PostNews)

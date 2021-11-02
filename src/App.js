@@ -18,6 +18,7 @@ import SubscriptionPoint from "./Components/SuperAdmin/Subscription/Subscription
 import ReactNotification from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 import NewsType from "./Components/SuperAdmin/NewsType/NewsType";
+import PostNews from "./Components/SuperAdmin/NewsType/PostNews";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
         <Route exact path="/add-employee" component={AddEmployee} />
         <Route exact path="/employee-list" component={EmployeeList} />
         <Route exact path="/news-type" component={NewsType} />
+        <Route exact path="/add-new-news" component={PostNews} />
       </Switch>
     </>
   );
