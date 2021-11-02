@@ -19,24 +19,34 @@ function CreateGroup(props) {
 
     //local state
     const [addMangeopen, setaddMangeopen] = useState(false);
+    //for sending data
     const [name, setname] = useState("");
-    const [catgoryArr, setcatgoryArr] = useState([]);
-    const [subcatgoryArr, setsubcatgoryArr] = useState([]);
+    const [profile, setprofile] = useState("")
     const [CategorydataArr, setCategorydataArr] = useState([])
     const [SubCategorydataArr, setSubCategorydataArr] = useState([])
+
+    //for set category and sub-catgory
+    const [catgoryArr, setcatgoryArr] = useState([]);
+    const [subcatgoryArr, setsubcatgoryArr] = useState([]);
+
     const [GroupDataArr, setGroupDataArr] = useState([]);
     const [EditDailogOpen, setEditDailogOpen] = useState(false);
     const [Editname, setEditname] = useState("")
-    const [Editcatgory, setEditcatgory] = useState("");
-    const [Editsubcatgory, setEditsubcatgory] = useState("")
+    const [EditcatgoryArr, setEditcatgoryArr] = useState([]);
+    const [EditsubcatgoryArr, setEditsubcatgoryArr] = useState([])
     const [isloading, setisloading] = useState(false);
+    const [isUpdated, setisUpdated] = useState(false)
 
     const theme = useTheme();
 
+    const OpenEditDailog = (data) => {
+        setEditname(data.name);
+        setEditcatgoryArr(data.category_name);
+        setEditsubcatgoryArr(data.sub_category_name);
+        setEditDailogOpen(!EditDailogOpen)
+    }
 
     useEffect(() => {
-        window.scrollTo(0, 0);
-
         //to get data of category
         const getCategoryData = () => {
             try {
@@ -84,6 +94,10 @@ function CreateGroup(props) {
             }
         }
         getSubCategoryData();
+    }, [])
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
 
         //to get data of Group
         const getGroupDetailData = () => {
@@ -108,15 +122,7 @@ function CreateGroup(props) {
             }
         }
         getGroupDetailData();
-    }, [])
-
-
-    const OpenEditDailog = (data) => {
-        setEditname(data.name);
-        setEditcatgory(data.catgory);
-        setEditsubcatgory(data.subcatgory);
-        setEditDailogOpen(!EditDailogOpen)
-    }
+    }, [isUpdated])
 
     const handleCategoryData = (event) => {
         const {
@@ -140,6 +146,57 @@ function CreateGroup(props) {
         console.log("Subcategory:::", SubCategorydataArr)
     };
 
+    const handleEditCategoryData = (event) => {
+        const {
+            target: { value },
+        } = event;
+        setEditcatgoryArr(
+            // On autofill we get a the stringified value.
+            typeof value === 'string' ? value.split(',') : value,
+        );
+        console.log("category:::", CategorydataArr)
+    };
+
+    const handleEditSubCategoryData = (event) => {
+        const {
+            target: { value },
+        } = event;
+        setEditsubcatgoryArr(            // On autofill we get a the stringified value.
+            typeof value === 'string' ? value.split(',') : value,
+        );
+        console.log("Subcategory:::", SubCategorydataArr)
+    };
+    //to add new Group
+    const AddGroupData = () => {
+        try {
+
+            setisloading(true)
+
+            let url = getBaseUrl() + "addGroup";
+            const fd = new FormData();
+            fd.append('name', name)
+            fd.append('category_name', CategorydataArr)
+            fd.append('sub_category_name', SubCategorydataArr)
+            fd.append('myField', profile, profile.name)
+            axios
+                .post(url, fd)
+                .then(
+                    (res) => {
+                        showNotificationMsz(res.data.msg, "success")
+                        setaddMangeopen(!addMangeopen)
+                        setisUpdated(!isUpdated)
+                        setisloading(false)
+                    },
+                    (error) => {
+                        setisloading(false)
+                        showNotificationMsz(error, "danger")
+                    }
+                )
+        } catch (error) {
+            setisloading(false)
+            showNotificationMsz(error, "danger")
+        }
+    };
     return (
         <>
             <div className="content_padding">
@@ -188,7 +245,9 @@ function CreateGroup(props) {
                                                             type="file"
                                                             className="form-control "
                                                             autoComplete="off"
-
+                                                            onChange={(e) => {
+                                                                setprofile(e.target.files[0])
+                                                            }}
                                                         />
 
                                                     </div>
@@ -210,7 +269,7 @@ function CreateGroup(props) {
                                                                         {catgoryArr.map((item, index) => (
                                                                             <MenuItem
                                                                                 key={index}
-                                                                                value={item._id}
+                                                                                value={item.name}
                                                                                 style={getStyles(name, CategorydataArr, theme)}
                                                                             >
                                                                                 {item.name}
@@ -238,7 +297,7 @@ function CreateGroup(props) {
                                                                         {subcatgoryArr.map((item, index) => (
                                                                             <MenuItem
                                                                                 key={index}
-                                                                                value={item._id}
+                                                                                value={item.name}
                                                                                 style={getStyles(name, SubCategorydataArr, theme)}
                                                                             >
                                                                                 {item.name}
@@ -254,7 +313,7 @@ function CreateGroup(props) {
                                                     <Button
                                                         variant="contained"
                                                         className="button_formatting"
-
+                                                        onClick={AddGroupData}
                                                     >
                                                         Create
                                                     </Button>
@@ -299,7 +358,7 @@ function CreateGroup(props) {
                                                 <Grid className="Component_main_grid mt-2">
                                                     <Grid item md={9}>
                                                         <div className="d-flex p-2">
-                                                        {item.sub_category_name.map((item, index) => (
+                                                            {item.sub_category_name.map((item, index) => (
                                                                 <span>{item}</span>
                                                             ))}
                                                         </div>
@@ -375,38 +434,58 @@ function CreateGroup(props) {
                         Category
                     </div>
                     <div className="mt-1">
-                        <select
-                            class="form-control"
-                            value={Editcatgory}
-                            onChange={(e) => {
-                                setEditcatgory(e.target.value);
-                            }}
-                        >
-                            <option value="">select Cateory</option>
-                            <option value="Cateory 1">Cateory 1</option>
-                            <option value="Cateory 2">Cateory 2</option>
-                            <option value="Cateory 3">Cateory 3</option>
-                            <option value="Cateory 4">Cateory 4</option>
-                        </select>
+                        <FormControl sx={{ m: 1, width: 300 }}>
+                            <Select
+                                multiple
+                                placeholder="Select Categories"
+                                value={EditcatgoryArr}
+                                onChange={handleEditCategoryData}
+                                variant="outlined"
+                                MenuProps={MenuProps}
+                            >
+                                {catgoryArr.map((item, index) => (
+                                    <MenuItem
+                                        key={index}
+                                        value={item.name}
+                                       // style={getStyles(name, EditcatgoryArr, theme)}
+                                    >
+                                        {item.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        {EditcatgoryArr.map((item, index) => (
+                            <span>{item},</span>
+                        ))}
                     </div>
 
                     <div className="text_filed_heading">
                         Sub Category
                     </div>
                     <div className=" mt-1">
-                        <select
-                            class="form-control"
-                            value={Editsubcatgory}
-                            onChange={(e) => {
-                                setEditsubcatgory(e.target.value);
-                            }}
-                        >
-                            <option value="">select sub-Cateory</option>
-                            <option value="sub Cateory 1">sub Cateory 1</option>
-                            <option value="sub Cateory 2">sub Cateory 2</option>
-                            <option value="sub Cateory 3">sub Cateory 3</option>
-                            <option value="sub Cateory 4">sub Cateory 4</option>
-                        </select>
+                        <FormControl sx={{ m: 1, width: 300 }}>
+                            <Select
+                                multiple
+                                placeholder="Select Categories"
+                                value={EditsubcatgoryArr}
+                                onChange={handleEditSubCategoryData}
+                                variant="outlined"
+                                MenuProps={MenuProps}
+                            >
+                                {subcatgoryArr.map((item, index) => (
+                                    <MenuItem
+                                        key={index}
+                                        value={item.name}
+                                       // style={getStyles(name, EditsubcatgoryArr, theme)}
+                                    >
+                                        {item.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        {EditsubcatgoryArr.map((item, index) => (
+                            <span>{item},</span>
+                        ))}
                     </div>
 
                 </DialogContent>
