@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Grid, Card, Button, Dialog, DialogActions, DialogTitle, DialogContent, Select, MenuItem, useTheme, FormControl } from '@material-ui/core';
+import { Grid, Card, Button, Dialog, DialogActions, DialogTitle, DialogContent } from '@material-ui/core';
 
 import Expand from "react-expand-animated";
 
@@ -20,10 +20,9 @@ function CreateGroup(props) {
     //local state
     const [addMangeopen, setaddMangeopen] = useState(false);
     //for sending data
-    const [name, setname] = useState("");
     const [profile, setprofile] = useState("")
-    const [CategorydataArr, setCategorydataArr] = useState([])
-    const [SubCategorydataArr, setSubCategorydataArr] = useState([])
+    const [Category, setCategory] = useState("")
+    const [SubCategory, setSubCategory] = useState("")
 
     //for set category and sub-catgory
     const [catgoryArr, setcatgoryArr] = useState([]);
@@ -31,18 +30,11 @@ function CreateGroup(props) {
 
     const [GroupDataArr, setGroupDataArr] = useState([]);
     const [EditDailogOpen, setEditDailogOpen] = useState(false);
-    const [Editname, setEditname] = useState("")
-    const [EditcatgoryArr, setEditcatgoryArr] = useState([]);
-    const [EditsubcatgoryArr, setEditsubcatgoryArr] = useState([])
     const [isloading, setisloading] = useState(false);
     const [isUpdated, setisUpdated] = useState(false)
 
-    const theme = useTheme();
 
     const OpenEditDailog = (data) => {
-        setEditname(data.name);
-        setEditcatgoryArr(data.category_name);
-        setEditsubcatgoryArr(data.sub_category_name);
         setEditDailogOpen(!EditDailogOpen)
     }
 
@@ -124,48 +116,7 @@ function CreateGroup(props) {
         getGroupDetailData();
     }, [isUpdated])
 
-    const handleCategoryData = (event) => {
-        const {
-            target: { value },
-        } = event;
-        setCategorydataArr(
-            // On autofill we get a the stringified value.
-            typeof value === 'string' ? value.split(',') : value,
-        );
-        console.log("category:::", CategorydataArr)
-    };
 
-    const handleSubCategoryData = (event) => {
-        const {
-            target: { value },
-        } = event;
-        setSubCategorydataArr(
-            // On autofill we get a the stringified value.
-            typeof value === 'string' ? value.split(',') : value,
-        );
-        console.log("Subcategory:::", SubCategorydataArr)
-    };
-
-    const handleEditCategoryData = (event) => {
-        const {
-            target: { value },
-        } = event;
-        setEditcatgoryArr(
-            // On autofill we get a the stringified value.
-            typeof value === 'string' ? value.split(',') : value,
-        );
-        console.log("category:::", CategorydataArr)
-    };
-
-    const handleEditSubCategoryData = (event) => {
-        const {
-            target: { value },
-        } = event;
-        setEditsubcatgoryArr(            // On autofill we get a the stringified value.
-            typeof value === 'string' ? value.split(',') : value,
-        );
-        console.log("Subcategory:::", SubCategorydataArr)
-    };
     //to add new Group
     const AddGroupData = () => {
         try {
@@ -174,9 +125,8 @@ function CreateGroup(props) {
 
             let url = getBaseUrl() + "addGroup";
             const fd = new FormData();
-            fd.append('name', name)
-            fd.append('category_name', CategorydataArr)
-            fd.append('sub_category_name', SubCategorydataArr)
+            fd.append('category_name', Category)
+            fd.append('sub_category_name', SubCategory)
             fd.append('myField', profile, profile.name)
             axios
                 .post(url, fd)
@@ -222,21 +172,46 @@ function CreateGroup(props) {
                                                             <i class="fa fa-times cursor" onClick={() => setaddMangeopen(!addMangeopen)}></i>
                                                         </span>
                                                     </div>
-                                                    <div className="text_filed_heading">
-                                                        Group Name
-                                                    </div>
-                                                    <div className=" mt-1">
-                                                        <input
-                                                            type="text"
-                                                            className="form-control "
-                                                            placeholder="Enter the Group Name"
-                                                            autoComplete="off"
-                                                            value={name}
-                                                            onChange={(e) => {
-                                                                setname(e.target.value);
-                                                            }}
-                                                        />
-                                                    </div>
+                                                    <Grid className="Component_main_grid mt-2">
+                                                        <Grid item md={6}>
+                                                            <div className="text_filed_heading">
+                                                                Category
+                                                            </div>
+                                                            <div className="input_Margin_right mt-1">
+                                                                <select
+                                                                    class="form-control"
+                                                                    value={Category}
+                                                                    onChange={(e) => {
+                                                                        setCategory(e.target.value)
+                                                                    }}>
+                                                                    <option value="">Select Category</option>
+                                                                    {catgoryArr.map((item, index) => (
+                                                                        <option value={item.name}>{item.name}</option>
+                                                                    ))}
+                                                                </select>
+                                                            </div>
+                                                        </Grid>
+
+                                                        <Grid item md={6}>
+                                                            <div className="text_filed_heading">
+                                                                Sub Category
+                                                            </div>
+                                                            <div className=" mt-1">
+                                                                <select
+                                                                    class="form-control"
+                                                                    value={SubCategory}
+                                                                    onChange={(e) => {
+                                                                        setSubCategory(e.target.value)
+                                                                    }}
+                                                                >
+                                                                    <option value="">Select Sub-Category</option>
+                                                                    {subcatgoryArr.map((item, index) => (
+                                                                        <option value={item.name}>{item.name}</option>
+                                                                    ))}
+                                                                </select>
+                                                            </div>
+                                                        </Grid>
+                                                    </Grid>
                                                     <div className="text_filed_heading">
                                                         Group Image
                                                     </div>
@@ -251,63 +226,7 @@ function CreateGroup(props) {
                                                         />
 
                                                     </div>
-                                                    <Grid className="Component_main_grid mt-2">
-                                                        <Grid item md={6}>
-                                                            <div className="text_filed_heading">
-                                                                Category
-                                                            </div>
-                                                            <div className="input_Margin_right mt-1">
-                                                                <FormControl sx={{ m: 1, width: 300 }}>
-                                                                    <Select
-                                                                        multiple
-                                                                        placeholder="Select Categories"
-                                                                        value={CategorydataArr}
-                                                                        onChange={handleCategoryData}
-                                                                        variant="outlined"
-                                                                        MenuProps={MenuProps}
-                                                                    >
-                                                                        {catgoryArr.map((item, index) => (
-                                                                            <MenuItem
-                                                                                key={index}
-                                                                                value={item.name}
-                                                                                style={getStyles(name, CategorydataArr, theme)}
-                                                                            >
-                                                                                {item.name}
-                                                                            </MenuItem>
-                                                                        ))}
-                                                                    </Select>
-                                                                </FormControl>
-                                                            </div>
-                                                        </Grid>
 
-                                                        <Grid item md={6}>
-                                                            <div className="text_filed_heading">
-                                                                Sub Category
-                                                            </div>
-                                                            <div className=" mt-1">
-                                                                <FormControl sx={{ m: 1, width: 300 }}>
-                                                                    <Select
-                                                                        multiple
-                                                                        placeholder="Select Categories"
-                                                                        value={SubCategorydataArr}
-                                                                        onChange={handleSubCategoryData}
-                                                                        variant="outlined"
-                                                                        MenuProps={MenuProps}
-                                                                    >
-                                                                        {subcatgoryArr.map((item, index) => (
-                                                                            <MenuItem
-                                                                                key={index}
-                                                                                value={item.name}
-                                                                                style={getStyles(name, SubCategorydataArr, theme)}
-                                                                            >
-                                                                                {item.name}
-                                                                            </MenuItem>
-                                                                        ))}
-                                                                    </Select>
-                                                                </FormControl>
-                                                            </div>
-                                                        </Grid>
-                                                    </Grid>
                                                 </div>
                                                 <div className="mt-2 pb-2 ">
                                                     <Button
@@ -414,19 +333,16 @@ function CreateGroup(props) {
                 </DialogTitle>
                 <DialogContent>
                     <div className="text_filed_heading">
-                        Group Name
+                        Group Image
                     </div>
                     <div className=" mt-1">
                         <input
-                            type="text"
+                            type="file"
                             className="form-control "
-                            placeholder="Enter the group Name"
                             autoComplete="off"
-                            value={Editname}
-                            onChange={(e) => {
-                                setEditname(e.target.value);
-                            }}
+
                         />
+
                     </div>
 
 
@@ -434,58 +350,24 @@ function CreateGroup(props) {
                         Category
                     </div>
                     <div className="mt-1">
-                        <FormControl sx={{ m: 1, width: 300 }}>
-                            <Select
-                                multiple
-                                placeholder="Select Categories"
-                                value={EditcatgoryArr}
-                                onChange={handleEditCategoryData}
-                                variant="outlined"
-                                MenuProps={MenuProps}
-                            >
-                                {catgoryArr.map((item, index) => (
-                                    <MenuItem
-                                        key={index}
-                                        value={item.name}
-                                       // style={getStyles(name, EditcatgoryArr, theme)}
-                                    >
-                                        {item.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                        {EditcatgoryArr.map((item, index) => (
-                            <span>{item},</span>
-                        ))}
+                        <select class="form-control">
+                            <option>Select Category</option>
+                            {catgoryArr.map((item, index) => (
+                                <option>{item.item}</option>
+                            ))}
+                        </select>
                     </div>
 
                     <div className="text_filed_heading">
                         Sub Category
                     </div>
                     <div className=" mt-1">
-                        <FormControl sx={{ m: 1, width: 300 }}>
-                            <Select
-                                multiple
-                                placeholder="Select Categories"
-                                value={EditsubcatgoryArr}
-                                onChange={handleEditSubCategoryData}
-                                variant="outlined"
-                                MenuProps={MenuProps}
-                            >
-                                {subcatgoryArr.map((item, index) => (
-                                    <MenuItem
-                                        key={index}
-                                        value={item.name}
-                                       // style={getStyles(name, EditsubcatgoryArr, theme)}
-                                    >
-                                        {item.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                        {EditsubcatgoryArr.map((item, index) => (
-                            <span>{item},</span>
-                        ))}
+                        <select class="form-control">
+                            <option>Select Sub-Category</option>
+                            {subcatgoryArr.map((item, index) => (
+                                <option>{item.item}</option>
+                            ))}
+                        </select>
                     </div>
 
                 </DialogContent>
@@ -509,23 +391,4 @@ function CreateGroup(props) {
     )
 }
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
-        },
-    },
-};
-
-function getStyles(name, personName, theme) {
-    return {
-        fontWeight:
-            personName.indexOf(name) === -1
-                ? theme.typography.fontWeightRegular
-                : theme.typography.fontWeightMedium,
-    };
-}
 export default HOC(CreateGroup)
