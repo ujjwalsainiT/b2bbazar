@@ -23,8 +23,8 @@ function Home(props) {
                             </Card>
                         </Grid>
                         <Grid item md={3} className="p-3">
-                            <Card className="p-5 text-center Card_shadow card_color">
-                                <div className="home_text_size"><strong>Query</strong></div>
+                            <Card className="p-5 text-center Card_shadow card_color" onClick={() => props.history.push("/product-review")}>
+                                <div className="home_text_size"><strong>Product Review</strong></div>
                             </Card>
                         </Grid>
                         <Grid item md={3} className="p-3">
@@ -50,7 +50,7 @@ function Home(props) {
                         </Grid>
 
                         <Grid item md={3} className="p-3">
-                        <Card className="p-5 text-center Card_shadow card_color" onClick={() => props.history.push("/statistics")}>
+                            <Card className="p-5 text-center Card_shadow card_color" onClick={() => props.history.push("/statistics")}>
                                 <div className="home_text_size"><strong><i class="fa fa-plus mr-2" />Statistics</strong></div>
                             </Card>
                         </Grid>

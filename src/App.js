@@ -21,6 +21,7 @@ import NewsType from "./Components/SuperAdmin/NewsType/NewsType";
 import PostNews from "./Components/SuperAdmin/NewsType/PostNews";
 import Statistics from "./Components/SuperAdmin/Statistics/Statistics";
 import StatisticsUser from "./Components/SuperAdmin/Statistics/StatisticsUser";
+import Productshow from "./Components/SuperAdmin/Productshow/Productshow";
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
         <Route exact path="/add-new-news" component={PostNews} />
         <Route exact path="/statistics" component={Statistics} />
         <Route exact path="/statistics-users" component={StatisticsUser} />
+        <Route exact path="/product-review" component={Productshow} />
       </Switch>
     </>
   );
