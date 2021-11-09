@@ -47,7 +47,7 @@ function Statistics(props) {
 
                                                     {" "}
                                                     <div className="d-flex p-2">
-                                                        <span className="action_icon ml-2">
+                                                        <span className="action_icon ml-2" onClick={() => props.history.push("/statistics-users")}>
                                                             View User
                                                         </span>
                                                     </div>

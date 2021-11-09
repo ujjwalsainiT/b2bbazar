@@ -20,6 +20,7 @@ import "react-notifications-component/dist/theme.css";
 import NewsType from "./Components/SuperAdmin/NewsType/NewsType";
 import PostNews from "./Components/SuperAdmin/NewsType/PostNews";
 import Statistics from "./Components/SuperAdmin/Statistics/Statistics";
+import StatisticsUser from "./Components/SuperAdmin/Statistics/StatisticsUser";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
         <Route exact path="/news-type" component={NewsType} />
         <Route exact path="/add-new-news" component={PostNews} />
         <Route exact path="/statistics" component={Statistics} />
+        <Route exact path="/statistics-users" component={StatisticsUser} />
       </Switch>
     </>
   );

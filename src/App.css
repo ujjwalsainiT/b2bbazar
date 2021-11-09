@@ -126,6 +126,9 @@ responsive to mobile view on various screen width as below */
 .MuiOutlinedInput-input {
   padding: 9.5px 14px !important;
 }
+.table_foramtitng {
+  border: 1px solid gray;
+}
 @media screen and (max-height: 450px) {
   .leftside {
     padding-top: 15px;
