@@ -5,19 +5,99 @@ import Expand from "react-expand-animated";
 //common header
 import HOC from "../../../Common/HOC";
 
+//for backend call
+import axios from "axios";
+import { getBaseUrl } from "../../../utils";
+import Loder from '../../../Loder/Loder';
+import { blankValidator, showNotificationMsz } from "../../../utils/Validation";
 
 function PostNews(props) {
+
+    //Newstype id
+    let NewsTypeId = props.location.state.item._id
 
     //local state
     const [addMangeopen, setaddMangeopen] = useState(false);
     const [name, setname] = useState("");
-    const [SubscriptionDataArr] = useState([]);
+    const [profile, setprofile] = useState("")
+    const [NewsDataArr, setNewsDataArr] = useState([]);
     const [EditDailogOpen, setEditDailogOpen] = useState(false);
     const [Editname, setEditname] = useState("");
+    const [isloading, setisloading] = useState(false)
+    const [isUpdated, setisUpdated] = useState(false)
+
+    //errors
+    const [nameError, setnameError] = useState(false);
+    const [profileError, setprofileError] = useState(false);
 
     useEffect(() => {
         window.scrollTo(0, 0);
-    }, [])
+        //to get data of News type
+        const getNewstypeData = () => {
+            try {
+                setisloading(true)
+                let url = getBaseUrl() + `getNewsContent/${NewsTypeId}`;
+                axios
+                    .get(url)
+                    .then(
+                        (res) => {
+                            setisloading(false)
+                            setNewsDataArr(res.data)
+                        },
+                        (error) => {
+                            setisloading(false)
+                            showNotificationMsz(error, "danger")
+                        }
+                    )
+            } catch (error) {
+                setisloading(false)
+                showNotificationMsz(error, "danger")
+            }
+        }
+        getNewstypeData();
+    }, [isUpdated])
+
+    //to add new News
+    const AddNewsData = () => {
+        try {
+            if (!blankValidator(name)) {
+                setnameError(true)
+                return;
+            }
+            if (!blankValidator(profile)) {
+                setprofileError(true)
+                return;
+            }
+
+            setisloading(true)
+
+            let url = getBaseUrl() + `addNewsContent/${NewsTypeId}`;
+            const fd = new FormData();
+            fd.append('newsTypeId', NewsTypeId)
+            fd.append('newsTitle', name)
+            fd.append('myField', profile, profile.name)
+            axios
+                .post(url, fd)
+                .then(
+                    (res) => {
+
+                        showNotificationMsz(res.data.msg, "success")
+                        setaddMangeopen(!addMangeopen)
+                        setisUpdated(!isUpdated)
+                        setisloading(false)
+                        setname("");
+                        setprofile("")
+                    },
+                    (error) => {
+                        setisloading(false)
+                        showNotificationMsz(error, "danger")
+                    }
+                )
+        } catch (error) {
+            setisloading(false)
+            showNotificationMsz(error, "danger")
+        }
+    };
 
 
     const OpenEditDailog = (data) => {
@@ -62,10 +142,13 @@ function PostNews(props) {
                                                             autoComplete="off"
                                                             value={name}
                                                             onChange={(e) => {
+                                                                setnameError(false)
                                                                 setname(e.target.value)
                                                             }}
                                                         />
-
+                                                        {nameError && (
+                                                            <span className="text-danger">Enter the News Title</span>
+                                                        )}
                                                     </div>
 
                                                     <div className="text_filed_heading">
@@ -76,15 +159,21 @@ function PostNews(props) {
                                                             type="file"
                                                             className="form-control "
                                                             autoComplete="off"
+                                                            onChange={(e) => {
+                                                                setprofileError(false)
+                                                                setprofile(e.target.files[0])
+                                                            }}
                                                         />
-
+                                                        {profileError && (
+                                                            <span className="text-danger">Choose the image</span>
+                                                        )}
                                                     </div>
                                                 </div>
                                                 <div className="mt-2 pb-2 ">
                                                     <Button
                                                         variant="contained"
                                                         className="button_formatting"
-
+                                                        onClick={AddNewsData}
                                                     >
                                                         Create
                                                     </Button>
@@ -100,8 +189,8 @@ function PostNews(props) {
                     <div className="card_admissiondetails_height mt-4">
                         <div className="textfiled_margin cardheight_overflow">
                             <hr />
-                            {SubscriptionDataArr.length > 0 ?
-                                (SubscriptionDataArr.map((item, index) => (
+                            {NewsDataArr.length > 0 ?
+                                (NewsDataArr.map((item, index) => (
                                     <Card className="Card_shadow mb-2 mt-2">
                                         <div className="card_admissiondetails_height">
                                             <div className="textfiled_margin">
@@ -109,13 +198,13 @@ function PostNews(props) {
                                                     <Grid item md={1}>
 
                                                         <div className=" p-2">
-
+                                                            <img src={`https://secure-plains-62142.herokuapp.com/public/images/${item.image}`} alt="" style={{ width: "60px", height: "40px" }} />
                                                         </div>
                                                     </Grid>
                                                     <Grid item md={3}>
 
                                                         <div className=" p-2">
-                                                            {item.name}
+                                                            {item.newsTitle}
                                                         </div>
                                                     </Grid>
                                                     <Grid item md={4}>
@@ -226,6 +315,8 @@ function PostNews(props) {
                     </Button>
                 </DialogActions>
             </Dialog>
+
+            <Loder loading={isloading} />
 
         </>
     )

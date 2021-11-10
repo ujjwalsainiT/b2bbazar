@@ -6,11 +6,11 @@ import Expand from "react-expand-animated";
 import HOC from "../../../Common/HOC";
 
 
-// //for backend call
-// import axios from "axios";
-// import { getBaseUrl } from "../../../utils";
-// import Loder from '../../../Loder/Loder';
-// import { blankValidator, showNotificationMsz } from "../../../utils/Validation";
+//for backend call
+import axios from "axios";
+import { getBaseUrl } from "../../../utils";
+import Loder from '../../../Loder/Loder';
+import { blankValidator, showNotificationMsz } from "../../../utils/Validation";
 
 function NewsType(props) {
 
@@ -18,23 +18,147 @@ function NewsType(props) {
     const [addMangeopen, setaddMangeopen] = useState(false);
     const [name, setname] = useState("");
     const [NewtypeArr, setNewtypeArr] = useState([])
-    const [NameEdit, setNameEdit] = useState([])
+    const [NameEdit, setNameEdit] = useState("")
+    const [EditId, setEditId] = useState("")
     const [EditDailogOpen, setEditDailogOpen] = useState(false);
+    const [isloading, setisloading] = useState(false)
+    const [isUpdated, setisUpdated] = useState(false)
+
+    //error
+    const [NameError, setNameError] = useState(false)
+    const [EditNameError, setEditNameError] = useState(false)
 
     useEffect(() => {
         window.scrollTo(0, 0);
+        //to get data of News type
+        const getNewstypeData = () => {
+            try {
+                setisloading(true)
+                let url = getBaseUrl() + "getNewsType";
+                axios
+                    .get(url)
+                    .then(
+                        (res) => {
+                            setisloading(false)
+                            setNewtypeArr(res.data)
+                        },
+                        (error) => {
+                            setisloading(false)
+                            showNotificationMsz(error, "danger")
+                        }
+                    )
+            } catch (error) {
+                setisloading(false)
+                showNotificationMsz(error, "danger")
+            }
+        }
+        getNewstypeData();
+    }, [isUpdated])
 
-    }, [])
 
+    //to add new Newtype
+    const AddNewtypeData = () => {
+        try {
+            if (!blankValidator(name)) {
+                setNameError(true)
+                return;
+            }
+            setisloading(true)
 
-    const OpenEditDailog = () => {
-        // setNameEdit(data.name);
-        // setEditCategoryId(data._id);
+            let url = getBaseUrl() + "addNewsType";
+            let temp = {
+                name
+            }
+            axios
+                .post(url, temp)
+                .then(
+                    (res) => {
+                        showNotificationMsz(res.data.msg, "success")
+                        setaddMangeopen(!addMangeopen)
+                        setisUpdated(!isUpdated)
+                        setisloading(false)
+                        setname("");
+                    },
+                    (error) => {
+                        setisloading(false)
+                        showNotificationMsz(error, "danger")
+                    }
+                )
+        } catch (error) {
+            setisloading(false)
+            showNotificationMsz(error, "danger")
+        }
+    };
+
+    const OpenEditDailog = (data) => {
+        setNameEdit(data.name);
+        setEditId(data._id);
         setEditDailogOpen(!EditDailogOpen)
     }
 
 
+    //To Update the data of NewType
 
+    const updateNewTypedata = (ID) => {
+        //NewType id
+        let id = ID
+        try {
+            if (!blankValidator(NameEdit)) {
+                setEditNameError(true);
+                return
+            }
+            setisloading(true)
+            let url = getBaseUrl() + `updateNewsType/${id}`;
+            let temp = {
+                name: NameEdit
+            }
+            axios
+                .post(url, temp)
+                .then(
+                    (res) => {
+                        showNotificationMsz(res.data.msg, "success")
+                        setEditDailogOpen(!EditDailogOpen)
+                        setisUpdated(!isUpdated)
+                        setisloading(false)
+                        setNameEdit("");
+                    },
+                    (error) => {
+                        showNotificationMsz(error, "danger")
+                        setisloading(false)
+                    }
+                )
+        } catch (error) {
+            showNotificationMsz(error, "danger")
+            setisloading(false)
+        }
+    }
+
+    //to delete the NewsType
+
+    const DeleteNewsType = (data) => {
+        //NewsType id
+        let id = data._id
+        try {
+            setisloading(true)
+            let url = getBaseUrl() + `deleteNewsType/${id}`;
+            axios
+                .get(url)
+                .then(
+                    (res) => {
+                        showNotificationMsz(res.data.msg, "success")
+                        setisUpdated(!isUpdated)
+                        setisloading(false)
+                    },
+                    (error) => {
+                        setisloading(false)
+                        showNotificationMsz(error, "danger")
+                    }
+                )
+        } catch (error) {
+            setisloading(false)
+            showNotificationMsz(error, "danger")
+        }
+    }
     return (
         <>
             <div className="content_padding">
@@ -71,9 +195,13 @@ function NewsType(props) {
                                                             autoComplete="off"
                                                             value={name}
                                                             onChange={(e) => {
+                                                                setNameError(false)
                                                                 setname(e.target.value);
                                                             }}
                                                         />
+                                                        {NameError && (
+                                                            <span className="text-danger">Enter the News Type</span>
+                                                        )}
                                                     </div>
 
                                                 </div>
@@ -81,13 +209,7 @@ function NewsType(props) {
                                                     <Button
                                                         variant="contained"
                                                         className="button_formatting"
-                                                        onClick={() => {
-                                                            NewtypeArr.push({
-                                                                name: name
-                                                            })
-                                                            setNewtypeArr([...NewtypeArr])
-                                                        }}
-
+                                                        onClick={AddNewtypeData}
                                                     >
                                                         Create
                                                     </Button>
@@ -121,16 +243,16 @@ function NewsType(props) {
                                                         <span className="action_icon mr-2 ml-1">
                                                             <i
                                                                 className="fa fa-pencil"
-                                                                onClick={() => OpenEditDailog}
+                                                                onClick={() => OpenEditDailog(item)}
                                                             ></i>
                                                         </span>
                                                         <span className="action_icon ml-2">
                                                             <i
                                                                 className="fa fa-trash "
-
+                                                                onClick={() => DeleteNewsType(item)}
                                                             ></i>
                                                         </span>
-                                                        <span className="action_icon ml-2" onClick={() => props.history.push("/add-new-news")}>
+                                                        <span className="action_icon ml-2" onClick={() => props.history.push("/add-new-news", { item })}>
                                                             Manage News
                                                         </span>
                                                     </div>
@@ -175,9 +297,13 @@ function NewsType(props) {
                             autoComplete="off"
                             value={NameEdit}
                             onChange={(e) => {
+                                setEditNameError(false)
                                 setNameEdit(e.target.value);
                             }}
                         />
+                        {EditNameError && (
+                            <span className="text-danger">Enter the News Type</span>
+                        )}
                     </div>
 
                 </DialogContent>
@@ -190,12 +316,15 @@ function NewsType(props) {
                     </Button>
                     <Button
                         className="button_formatting"
+                        onClick={() => updateNewTypedata(EditId)}
                     >
                         Save{" "}
                     </Button>
                 </DialogActions>
             </Dialog>
 
+
+            <Loder loading={isloading} />
         </>
     )
 }
