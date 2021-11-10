@@ -116,7 +116,11 @@ function EmployeeList(props) {
                                                 {row.dob}
                                             </StyledTableCell>
                                             <StyledTableCell align="left">
-
+                                                <div className="d-flex">
+                                                    <span className="text-info "><i className="fa fa-edit hover_cursor" /></span>
+                                                    <span className="text-info ml-3"><i className="fa fa-trash hover_cursor" /></span>
+                                                    <span className="text-info ml-3 hover_cursor">Asign Task</span>
+                                                </div>
                                             </StyledTableCell>
 
                                         </StyledTableRow>
