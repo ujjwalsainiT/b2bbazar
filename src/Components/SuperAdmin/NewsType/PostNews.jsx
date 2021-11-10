@@ -23,12 +23,16 @@ function PostNews(props) {
     const [NewsDataArr, setNewsDataArr] = useState([]);
     const [EditDailogOpen, setEditDailogOpen] = useState(false);
     const [Editname, setEditname] = useState("");
+    const [EditPhoto, setEditPhoto] = useState("");
+    const [EditProfile, setEditProfile] = useState("")
+    const [EditId, setEditId] = useState("")
     const [isloading, setisloading] = useState(false)
     const [isUpdated, setisUpdated] = useState(false)
 
     //errors
     const [nameError, setnameError] = useState(false);
     const [profileError, setprofileError] = useState(false);
+    const [EditNameError, setEditNameError] = useState(false)
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -55,7 +59,15 @@ function PostNews(props) {
             }
         }
         getNewstypeData();
-    }, [isUpdated])
+    }, [isUpdated, NewsTypeId])
+
+    const OpenEditDailog = (data) => {
+        setEditname(data.newsTitle);
+        setEditPhoto(data.image)
+        console.log("Image", data.image)
+        setEditId(data._id)
+        setEditDailogOpen(!EditDailogOpen)
+    }
 
     //to add new News
     const AddNewsData = () => {
@@ -100,12 +112,74 @@ function PostNews(props) {
     };
 
 
-    const OpenEditDailog = (data) => {
-        setEditname(data.name);
-        setEditDailogOpen(!EditDailogOpen)
+
+
+    //To Update the data of News Data
+
+    const updateNewsdata = (ID) => {
+        //News id
+        let id = ID
+        try {
+            if (!blankValidator(Editname)) {
+                setEditNameError(true)
+                return;
+            }
+            setisloading(true)
+            let url = getBaseUrl() + `updateNewsContent/${id}`;
+            const fd = new FormData();
+            //fd.append('newsTypeId', NewsTypeId)
+            fd.append('newsTitle', Editname)
+            fd.append('currentImage', EditProfile ? EditProfile : EditPhoto)
+            axios
+                .post(url, fd)
+                .then(
+                    (res) => {
+
+                        showNotificationMsz(res.data.msg, "success")
+                        setEditDailogOpen(!EditDailogOpen)
+                        setisUpdated(!isUpdated)
+                        setisloading(false)
+                        setEditname("");
+                        setEditPhoto("")
+                        setEditProfile("")
+                    },
+                    (error) => {
+                        showNotificationMsz(error, "danger")
+                        setisloading(false)
+                    }
+                )
+        } catch (error) {
+            showNotificationMsz(error, "danger")
+            setisloading(false)
+        }
     }
 
+    //to delete the NewsType
 
+    const DeleteNewsType = (data) => {
+        //NewsType id
+        let id = data._id
+        try {
+            setisloading(true)
+            let url = getBaseUrl() + `deleteNewsContent/${id}`;
+            axios
+                .get(url)
+                .then(
+                    (res) => {
+                        showNotificationMsz(res.data.msg, "success")
+                        setisUpdated(!isUpdated)
+                        setisloading(false)
+                    },
+                    (error) => {
+                        setisloading(false)
+                        showNotificationMsz(error, "danger")
+                    }
+                )
+        } catch (error) {
+            setisloading(false)
+            showNotificationMsz(error, "danger")
+        }
+    }
     return (
         <>
             <div className="content_padding">
@@ -222,7 +296,7 @@ function PostNews(props) {
                                                             <span className="action_icon ml-2">
                                                                 <i
                                                                     className="fa fa-trash "
-
+                                                                    onClick={() => DeleteNewsType(item)}
                                                                 ></i>
                                                             </span>
 
@@ -268,9 +342,13 @@ function PostNews(props) {
                             autoComplete="off"
                             value={Editname}
                             onChange={(e) => {
+                                setEditNameError(false)
                                 setEditname(e.target.value);
                             }}
                         />
+                        {EditNameError && (
+                            <span className="text-danger">Enter the News Title</span>
+                        )}
                     </div>
 
                     <div className="text_filed_heading">
@@ -287,13 +365,16 @@ function PostNews(props) {
                                 <input
                                     type="file"
                                     class="custom-file-input"
-
+                                    onChange={(e) => {
+                                        setEditPhoto(e.target.files[0].name)
+                                        setEditProfile(e.target.files[0])
+                                    }}
                                 />
                                 <label
                                     class="custom-file-label"
                                     for="inputGroupFile01"
                                 >
-
+                                    {EditPhoto}
                                 </label>
                             </div>
                         </div>
@@ -309,7 +390,7 @@ function PostNews(props) {
                     </Button>
                     <Button
                         className="button_formatting"
-
+                        onClick={() => updateNewsdata(EditId)}
                     >
                         Save{" "}
                     </Button>
