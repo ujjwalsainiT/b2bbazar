@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Card } from '@material-ui/core';
 import "./AddEmployee.css";
 
@@ -16,6 +16,11 @@ import Paper from "@material-ui/core/Paper";
 import TablePagination from "@material-ui/core/TablePagination";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 
+//for backend call
+import axios from "axios";
+import { getBaseUrl } from "../../../utils";
+import Loder from '../../../Loder/Loder';
+import { showNotificationMsz } from "../../../utils/Validation";
 
 function EmployeeList(props) {
 
@@ -23,7 +28,35 @@ function EmployeeList(props) {
     const classes = useStyles();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
-    const [EmployeeListArr] = useState([])
+    const [EmployeeListArr, setEmployeeListArr] = useState([])
+    const [isloading, setisloading] = useState(false)
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+        //to get data of News type
+        const getNewstypeData = () => {
+            try {
+                setisloading(true)
+                let url = getBaseUrl() + "getEmployee";
+                axios
+                    .get(url)
+                    .then(
+                        (res) => {
+                            setisloading(false)
+                            setEmployeeListArr(res.data)
+                        },
+                        (error) => {
+                            setisloading(false)
+                            showNotificationMsz(error, "danger")
+                        }
+                    )
+            } catch (error) {
+                setisloading(false)
+                showNotificationMsz(error, "danger")
+            }
+        }
+        getNewstypeData();
+    }, [])
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -52,13 +85,12 @@ function EmployeeList(props) {
                                         <StyledTableCell align="left" className="table_header">
                                             Name
                                         </StyledTableCell>
-                                        <StyledTableCell align="center" className="table_header">
+                                        <StyledTableCell align="left" className="table_header">
                                             Email
                                         </StyledTableCell>
-                                        <StyledTableCell className="table_header" align="left">
+                                        <StyledTableCell align="left" className="table_header">
                                             Date of birth
                                         </StyledTableCell>
-
                                         <StyledTableCell align="left" className="table_header">
                                             Action
                                         </StyledTableCell>
@@ -75,13 +107,13 @@ function EmployeeList(props) {
                                     ).map((row) => (
                                         <StyledTableRow>
                                             <StyledTableCell align="left">
-
+                                                {row.firstname + " " + row.lastname}
                                             </StyledTableCell>
                                             <StyledTableCell align="left">
-
+                                                {row.email}
                                             </StyledTableCell>
                                             <StyledTableCell align="left">
-
+                                                {row.dob}
                                             </StyledTableCell>
                                             <StyledTableCell align="left">
 
@@ -106,6 +138,8 @@ function EmployeeList(props) {
                     {/* -------------------------list of users---------------------- */}
                 </Card>
             </div>
+
+            <Loder loading={isloading} />
         </>
     )
 }

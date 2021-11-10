@@ -129,7 +129,10 @@ function PostNews(props) {
             const fd = new FormData();
             //fd.append('newsTypeId', NewsTypeId)
             fd.append('newsTitle', Editname)
-            fd.append('currentImage', EditProfile ? EditProfile : EditPhoto)
+            if (EditProfile) {
+                fd.append('myField', EditProfile)
+            } else
+                fd.append('currentImage', EditPhoto)
             axios
                 .post(url, fd)
                 .then(
