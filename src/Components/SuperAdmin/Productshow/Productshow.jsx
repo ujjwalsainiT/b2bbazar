@@ -5,10 +5,7 @@ import { Grid, Card } from '@material-ui/core';
 import HOC from "../../../Common/HOC";
 
 function Productshow(props) {
-
-
-
-    const [GroupDataArr, setGroupDataArr] = useState([
+    const [GroupDataArr] = useState([
         { name: "Laptop" },
         { name: "Laptop" },
     ]);

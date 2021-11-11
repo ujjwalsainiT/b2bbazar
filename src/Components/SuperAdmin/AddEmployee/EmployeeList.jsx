@@ -73,7 +73,7 @@ function EmployeeList(props) {
                 <div className="mb-3 page_heading">Employee List</div>
                 <Card className="p-3 Card_shadow">
                     <div className="text-right">
-                        <span className="addEmployee_font" onClick={() => props.history.push("/add-employee")}> <i className="fa fa-plus-circle mr-1"></i> Add Employee</span>
+                        <span className="addEmployee_font" onClick={() => props.history.push("/add-employee", { pageType: "Add" })}> <i className="fa fa-plus-circle mr-1"></i> Add Employee</span>
                     </div>
                     {/* --------------------list of users-------------- */}
                     <div className="table_foramtitng mt-2">
@@ -117,7 +117,7 @@ function EmployeeList(props) {
                                             </StyledTableCell>
                                             <StyledTableCell align="left">
                                                 <div className="d-flex">
-                                                    <span className="text-info "><i className="fa fa-edit hover_cursor" /></span>
+                                                    <span className="text-info "><i className="fa fa-edit hover_cursor" onClick={() => props.history.push("/add-employee", { pageType: "Edit", row })} /></span>
                                                     <span className="text-info ml-3"><i className="fa fa-trash hover_cursor" /></span>
                                                     <span className="text-info ml-3 hover_cursor">Asign Task</span>
                                                 </div>

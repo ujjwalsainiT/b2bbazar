@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Grid, Card, Button } from '@material-ui/core';
 import "./AddEmployee.css";
 
@@ -12,6 +12,9 @@ import Loder from '../../../Loder/Loder';
 import { showNotificationMsz } from "../../../utils/Validation";
 
 function AddEmployee(props) {
+    console.log("props:::", props)
+    let PageType = props.location.state.pageType
+
     //local state
     const [firstname, setfirstname] = useState("");
     const [lastname, setlastname] = useState("");
@@ -35,60 +38,141 @@ function AddEmployee(props) {
     const [permanentstate, setpermanentstate] = useState("");
     const [permanentpincode, setpermanentpincode] = useState("")
 
+    const [EditId, setEditId] = useState("")
+
     const [isloading, setisloading] = useState(false)
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+        if (PageType === "Edit") {
+            let data = props.location.state.row;
+            setEditId(data._id);
+            setfirstname(data.firstname);
+            setlastname(data.lastname);
+            setdob(data.dob);
+            setgender(data.gender);
+            setmobileno(data.mobileno);
+            setemail(data.email)
+            setaadharno(data.aadharno)
+            setmaritalstatus(data.maritalstatus);
+            setqualification(data.qualification);
+            setfatherfirstname(data.fatherfirstname);
+            setfatherlastname(data.fatherlastname);
+            setmotherfirstname(data.motherfirstname);
+            setmotherlastname(data.motherlastname);
+            setcurrentaddress(data.currentaddress);
+            setcurrentcity(data.currentcity);
+            setcurrentstate(data.currentstate);
+            setcurrentpincode(data.currentpincode);
+            setpermanentaddress(data.permanentaddress);
+            setpermanentcity(data.permanentcity);
+            setpermanentstate(data.permanentstate);
+            setpermanentpincode(data.permanentpincode);
+        }
+
+    }, [PageType, props.location.state.row])
 
     //to add new NewEmployee
     const AddNewEmployeeData = () => {
-        try {
-            setisloading(true)
+        if (PageType === "Add") {
+            try {
+                setisloading(true)
 
-            let url = getBaseUrl() + "addEmployee";
-            let temp = {
-                firstname,
-                lastname,
-                dob,
-                gender,
-                mobileno,
-                email,
-                aadharno,
-                maritalstatus,
-                qualification,
-                fatherfirstname,
-                fatherlastname,
-                motherfirstname,
-                motherlastname,
-                currentaddress,
-                currentcity,
-                currentstate,
-                currentpincode,
-                permanentaddress,
-                permanentcity,
-                permanentstate,
-                permanentpincode
+                let url = getBaseUrl() + "addEmployee";
+                let temp = {
+                    firstname,
+                    lastname,
+                    dob,
+                    gender,
+                    mobileno,
+                    email,
+                    aadharno,
+                    maritalstatus,
+                    qualification,
+                    fatherfirstname,
+                    fatherlastname,
+                    motherfirstname,
+                    motherlastname,
+                    currentaddress,
+                    currentcity,
+                    currentstate,
+                    currentpincode,
+                    permanentaddress,
+                    permanentcity,
+                    permanentstate,
+                    permanentpincode
+                }
+                axios
+                    .post(url, temp)
+                    .then(
+                        (res) => {
+                            showNotificationMsz(res.data.msg, "success")
+                            setisloading(false)
+                            props.history.goBack();
+                        },
+                        (error) => {
+                            setisloading(false)
+                            showNotificationMsz(error, "danger")
+                        }
+                    )
+            } catch (error) {
+                setisloading(false)
+                showNotificationMsz(error, "danger")
             }
-            axios
-                .post(url, temp)
-                .then(
-                    (res) => {
-                        showNotificationMsz(res.data.msg, "success")
-                        setisloading(false)
-                        props.history.goBack();
-                    },
-                    (error) => {
-                        setisloading(false)
-                        showNotificationMsz(error, "danger")
-                    }
-                )
-        } catch (error) {
-            setisloading(false)
-            showNotificationMsz(error, "danger")
+        } else {
+            try {
+                setisloading(true)
+
+                let url = getBaseUrl() + `updateEmployee/${EditId}`;
+                let temp = {
+                    firstname,
+                    lastname,
+                    dob,
+                    gender,
+                    mobileno,
+                    email,
+                    aadharno,
+                    maritalstatus,
+                    qualification,
+                    fatherfirstname,
+                    fatherlastname,
+                    motherfirstname,
+                    motherlastname,
+                    currentaddress,
+                    currentcity,
+                    currentstate,
+                    currentpincode,
+                    permanentaddress,
+                    permanentcity,
+                    permanentstate,
+                    permanentpincode
+                }
+                axios
+                    .post(url, temp)
+                    .then(
+                        (res) => {
+                            showNotificationMsz(res.data.msg, "success")
+                            setisloading(false)
+                            props.history.goBack();
+                        },
+                        (error) => {
+                            setisloading(false)
+                            showNotificationMsz(error, "danger")
+                        }
+                    )
+            } catch (error) {
+                setisloading(false)
+                showNotificationMsz(error, "danger")
+            }
         }
     };
 
     return (
         <>
             <div className="content_padding">
-                <div className="mb-3 page_heading">Add Employee</div>
+                <div className="mb-3 page_heading">
+                    {PageType === "Edit" ? <span>Update Employee</span> : <span>Add Employee</span>}
+                </div>
                 <Card className="pt-3 pb-4 mb-4 Card_shadow">
                     <div className="textfiled_margin">
                         <Grid className="Component_main_grid mt-2">
@@ -505,7 +589,7 @@ function AddEmployee(props) {
                                 className="button_formatting"
                                 onClick={AddNewEmployeeData}
                             >
-                                Add Employee
+                                {PageType === "Edit" ? <span>Update Employee</span> : <span>Add Employee</span>}
                             </Button>
                         </div>
                     </div>
