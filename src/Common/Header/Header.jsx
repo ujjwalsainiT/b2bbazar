@@ -35,7 +35,7 @@ const Header = (props) => {
                     <div className="header_links">
                         <span className="header_link_color" onClick={() => props.history.push("/home")}>Home</span>
                         <span className="header_link_color" onClick={() => props.history.push("/subscription")}>Subscription</span>
-                        <span className="header_link_color">Add Employee</span>
+                        <span className="header_link_color" onClick={() => props.history.push("/employee-list")} >Add Employee</span>
                         <span className="header_link_color">Query</span>
 
                     </div>

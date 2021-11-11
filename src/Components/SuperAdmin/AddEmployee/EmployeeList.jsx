@@ -30,6 +30,7 @@ function EmployeeList(props) {
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [EmployeeListArr, setEmployeeListArr] = useState([])
     const [isloading, setisloading] = useState(false)
+    const [isUpdated, setisUpdated] = useState(false)
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -56,7 +57,34 @@ function EmployeeList(props) {
             }
         }
         getNewstypeData();
-    }, [])
+    }, [isUpdated])
+
+    //to delete the Employee Data
+
+    const DeleteEmployeeData = (data) => {
+        //EmployeeData id
+        let id = data._id
+        try {
+            setisloading(true)
+            let url = getBaseUrl() + `deleteEmployee/${id}`;
+            axios
+                .get(url)
+                .then(
+                    (res) => {
+                        showNotificationMsz(res.data.msg, "success")
+                        setisUpdated(!isUpdated)
+                        setisloading(false)
+                    },
+                    (error) => {
+                        setisloading(false)
+                        showNotificationMsz(error, "danger")
+                    }
+                )
+        } catch (error) {
+            setisloading(false)
+            showNotificationMsz(error, "danger")
+        }
+    }
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -118,7 +146,7 @@ function EmployeeList(props) {
                                             <StyledTableCell align="left">
                                                 <div className="d-flex">
                                                     <span className="text-info "><i className="fa fa-edit hover_cursor" onClick={() => props.history.push("/add-employee", { pageType: "Edit", row })} /></span>
-                                                    <span className="text-info ml-3"><i className="fa fa-trash hover_cursor" /></span>
+                                                    <span className="text-info ml-3"><i className="fa fa-trash hover_cursor" onClick={() => DeleteEmployeeData(row)} /></span>
                                                     <span className="text-info ml-3 hover_cursor">Asign Task</span>
                                                 </div>
                                             </StyledTableCell>
