@@ -267,7 +267,7 @@ function CreateGroup(props) {
                                                     </Grid>
                                                     <Grid item md={6}>
                                                         <div className="d-flex p-2">
-                                                            {item.category_name.map((item, index) => (
+                                                            {item.category_id.map((item, index) => (
                                                                 <span>{item}</span>
                                                             ))}
                                                         </div>
@@ -277,7 +277,7 @@ function CreateGroup(props) {
                                                 <Grid className="Component_main_grid mt-2">
                                                     <Grid item md={9}>
                                                         <div className="d-flex p-2">
-                                                            {item.sub_category_name.map((item, index) => (
+                                                            {item.sub_category_id.map((item, index) => (
                                                                 <span>{item}</span>
                                                             ))}
                                                         </div>
